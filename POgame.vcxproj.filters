@@ -81,4 +81,7 @@
       <Filter>Engine\Exceptions</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <None Include=".gitignore" />
+  </ItemGroup>
 </Project>

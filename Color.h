@@ -8,6 +8,7 @@ namespace Utils {
 		static int czarny;
 		static int prawieCzarny;
 		static int zielony;
+		static int trawiasty;
 		static int czerwony;
 		static int niebieski;
 		static int fioletowy;

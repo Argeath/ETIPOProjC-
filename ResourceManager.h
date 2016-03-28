@@ -38,7 +38,7 @@ namespace Engine
 
 			if(res->source == nullptr)
 			{
-				throw new ResourceNotLoadedException(filename);
+				throw ResourceNotLoadedException(filename);
 			}
 			resources.push_back(res);
 			return resources.size() - 1;

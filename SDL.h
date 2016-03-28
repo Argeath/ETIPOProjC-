@@ -1,6 +1,7 @@
 extern "C" {
 	#include "./sdl/include/SDL.h"
 	#include "./sdl/include/SDL_main.h"
+	#include "./sdl/include/SDL_image.h"
 }
 
 #ifdef __cplusplus

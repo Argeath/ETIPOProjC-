@@ -35,12 +35,16 @@ Window::~Window() {
 
 int Window::init() {
 	if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
-		printf("SDL_Init error: %s\n", SDL_GetError());
+		printf( "SDL_Init error: %s\n", SDL_GetError());
+		return 1;
+	}
+	int flags = IMG_INIT_PNG;
+	if (IMG_Init(IMG_INIT_PNG) & flags != flags) {
+		printf("IMG_Init error: %s\n", IMG_GetError());
 		return 1;
 	}
 
-	rc = SDL_CreateWindowAndRenderer(SCREEN_WIDTH, SCREEN_HEIGHT, 0,
-		&window, &renderer);
+	rc = SDL_CreateWindowAndRenderer(SCREEN_WIDTH, SCREEN_HEIGHT, 0, &window, &renderer);
 	if (rc != 0) {
 		SDL_Quit();
 		printf("SDL_CreateWindowAndRenderer error: %s\n", SDL_GetError());
@@ -51,34 +55,43 @@ int Window::init() {
 	SDL_RenderSetLogicalSize(renderer, SCREEN_WIDTH, SCREEN_HEIGHT);
 	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 
-	SDL_SetWindowTitle(window, "Tetris - Dominik Kinal 160589");
+	SDL_SetWindowTitle(window, "POGame - Dominik Kinal 160589");
 
+	screen = SDL_CreateRGBSurface(0, SCREEN_WIDTH, SCREEN_HEIGHT, 32, 0x00FF0000, 0x0000FF00, 0x000000FF, 0xFF000000);
 
-	screen = SDL_CreateRGBSurface(0, SCREEN_WIDTH, SCREEN_HEIGHT, 32,
-		0x00FF0000, 0x0000FF00, 0x000000FF, 0xFF000000);
-
-	scrtex = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888,
-		SDL_TEXTUREACCESS_STREAMING,
-		SCREEN_WIDTH, SCREEN_HEIGHT);
+	scrtex = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	// wy³¹czenie widocznoœci kursora myszy
 	SDL_ShowCursor(SDL_DISABLE);
 
 	Color::init(screen);
 
+	printf("abc");
 	// wczytanie obrazka cs8x8.bmp
 	try {
-		int charsetId = resourceManager->AddResource("./cs8x8.bmp", "charset");
+		int charsetId = resourceManager->AddResource("./images/cs8x8.bmp", "charset");
 
 		SDL_SetColorKey(resourceManager->getResourceByIndex(charsetId)->source, true, 0x000000);
+
+		resourceManager->AddResource("./images/grass.png", "grass");
+		resourceManager->AddResource("./images/guarana.png", "guarana");
+		resourceManager->AddResource("./images/wolfberry.png", "wolfberry");
+		resourceManager->AddResource("./images/mlecz.png", "mlecz");
+		resourceManager->AddResource("./images/wolf.png", "wolf");
+		resourceManager->AddResource("./images/sheep.png", "sheep");
+		resourceManager->AddResource("./images/sheep.png", "turtle");
+		resourceManager->AddResource("./images/antelope.png", "antelope");
+		resourceManager->AddResource("./images/knight.png", "knight");
 	} catch(ResourceNotLoadedException ex)
 	{
-		printf(ex.what());
+		printf("Exception: %s\n", ex.what());
 		quitWindow();
 		return 1;
 	}
 
 	t1 = SDL_GetTicks();
+
+	printf("abc");
 
 	return 0;
 }
@@ -104,8 +117,15 @@ void Window::loop() {
 			fpsTimer -= 0.3;
 		}
 
+		DrawRectangle(0, 0, GAME_WIDTH, GAME_HEIGHT, Color::trawiasty, Color::trawiasty);
+
+		DrawLine(0, 100, GAME_WIDTH, 1, 0, Color::czerwony);
+		DrawLine(100, 0, GAME_HEIGHT, 0, 1, Color::czerwony);
+		DrawSurface(resourceManager->getResourceByName("grass")->source, 100, 100);
+
 		if (game != nullptr) {
 			game->update(delta);
+
 			game->render(screen, resourceManager);
 
 			renderWindow();
@@ -220,5 +240,6 @@ void Window::quitWindow() {
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(window);
 
+	IMG_Quit();
 	SDL_Quit();
 }

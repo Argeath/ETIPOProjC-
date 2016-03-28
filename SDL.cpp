@@ -26,12 +26,12 @@ void DrawString(int x, int y, const char *text) {
 SDL_Surface* LoadSurface(char* text) {
 	SDL_Surface* optimized = nullptr;
 
-	SDL_Surface* loaded = SDL_LoadBMP(text);
+	SDL_Surface* loaded = IMG_Load(text);
 	if (loaded == nullptr) {
 		printf("Unable to load image %s! SDL Error: %s\n", text, SDL_GetError());
 	}
 	else {
-		optimized = SDL_ConvertSurface(loaded, Engine::Window::getActiveWindow()->screen->format, NULL); 
+		optimized = SDL_ConvertSurface(loaded, Window::getActiveWindow()->screen->format, NULL); 
 		if (optimized == nullptr) { 
 			printf("Unable to optimize image %s! SDL Error: %s\n", text, SDL_GetError()); 
 		}
@@ -39,7 +39,6 @@ SDL_Surface* LoadSurface(char* text) {
 	}
 	return optimized;
 }
-
 
 // narysowanie na ekranie screen powierzchni sprite w punkcie (x, y)
 // (x, y) to punkt œrodka obrazka sprite na ekranie

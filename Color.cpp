@@ -12,12 +12,14 @@ int Color::pomaranczowy = 0;
 int Color::rozowy = 0;
 int Color::szary = 0;
 int Color::zielony = 0;
+int Color::trawiasty = 0;
 int Color::zolty = 0;
 
 void Color::init(SDL_Surface *screen) {
 	czarny = SDL_MapRGB(screen->format, 0x00, 0x00, 0x00);
 	prawieCzarny = SDL_MapRGB(screen->format, 0x15, 0x15, 0x15);
 	zielony = SDL_MapRGB(screen->format, 0x00, 0xFF, 0x00);
+	trawiasty = SDL_MapRGB(screen->format, 0x02B, 0x82, 0x35);
 	czerwony = SDL_MapRGB(screen->format, 0xFF, 0x00, 0x00);
 	niebieski = SDL_MapRGB(screen->format, 0x8A, 0x2B, 0xE2);
 	fioletowy = SDL_MapRGB(screen->format, 0x11, 0x11, 0xCC);
