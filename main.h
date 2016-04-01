@@ -5,7 +5,6 @@ enum EVENT_KEY {
 };
 
 #define _USE_MATH_DEFINES
-#define DEBUG_MODE
 
 #define MAP_WIDTH		20
 #define MAP_HEIGHT		20
@@ -27,16 +26,9 @@ enum EVENT_KEY {
 #include <iostream>
 #include "Vector2.h"
 #include "text.h"
-#include "ResourceNotLoadedException.h"
-#include "SDL.h"
+#include "conio2.h"
 
-#ifdef DEBUG_MODE
-#include "Debug.h"
-#endif
-
-#include "Color.h"
 #include "DialogBox.h"
-#include "ResourceManager.h"
 #include "BaseGame.h"
 #include "Window.h"
 

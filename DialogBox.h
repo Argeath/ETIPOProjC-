@@ -15,7 +15,7 @@ namespace Engine {
 
 		DialogBox() : size(V2(600, 60)), successCallback(nullptr), failureCallback(nullptr) {}
 
-		virtual void handleKeys(SDL_Keycode key) = 0;
+		virtual void handleKeys(char key) = 0;
 		virtual void render() = 0;
 		void renderWindow() const;
 		void closeWindow();
@@ -28,20 +28,20 @@ namespace Engine {
 
 		InputDialogBox() : limitCharacters(15) {}
 
-		void handleKeys(SDL_Keycode key) override;
+		void handleKeys(char key) override;
 		void render() override;
 	};
 
 	class InfoDialogBox : public DialogBox {
 	public:
-		SDL_Keycode yesKey, noKey, thirdKey;
+		char yesKey, noKey, thirdKey;
 		Utils::Text yesText, noText, thirdText;
 
 		CallbackFunction thirdCallback;
 
 		InfoDialogBox() {}
 
-		void handleKeys(SDL_Keycode key) override;
+		void handleKeys(char key) override;
 		void render() override;
 	};
 

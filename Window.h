@@ -4,21 +4,13 @@ namespace Engine {
 	class Window {
 		static Window* activeWindow;
 
-	public:
-		int t1, t2, quit, frames, rc;
-		double delta, worldTime, fpsTimer, fps;
-		SDL_Event event;
-		SDL_Surface *screen;
-		SDL_Texture *scrtex;
-		SDL_Window *window;
-		SDL_Renderer *renderer;
-		DialogBox *dialogBox;
-		ResourceManager* resourceManager;
-		BaseGame* game;
+		char windowTab[20][20];
 
-		#ifdef DEBUG_MODE
-		Debug *debug;
-		#endif
+	public:
+		int quit;
+		double worldTime;
+		DialogBox *dialogBox;
+		BaseGame* game;
 
 		Window();
 		~Window();
@@ -30,10 +22,7 @@ namespace Engine {
 		void quitWindow();
 		void showWindow(DialogBoxType type);
 
-		SDL_Surface* getCharset() const
-		{
-			return resourceManager->getResourceByName("charset")->source;
-		}
+		static void clearWindow();
 
 		static Window* getActiveWindow() {
 			return activeWindow;

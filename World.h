@@ -3,7 +3,7 @@
 namespace Game {
 	class World : public Engine::BaseGame
 	{
-		list<Organism*> organisms;
+		std::list<Organism*> organisms;
 
 	public:
 		World(Engine::Window* window) : BaseGame(window)
@@ -13,7 +13,7 @@ namespace Game {
 			organisms.push_back(wolf);
 		}
 
-		void update(double deltaTime) override;
+		void update() override;
 		void render() override;
 	};
 }

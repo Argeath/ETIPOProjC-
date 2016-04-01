@@ -36,15 +36,6 @@
     <ClCompile Include="text.cpp">
       <Filter>Utils</Filter>
     </ClCompile>
-    <ClCompile Include="Color.cpp">
-      <Filter>Utils</Filter>
-    </ClCompile>
-    <ClCompile Include="SDL.cpp">
-      <Filter>Utils</Filter>
-    </ClCompile>
-    <ClCompile Include="Debug.cpp">
-      <Filter>Engine</Filter>
-    </ClCompile>
     <ClCompile Include="DialogBox.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
@@ -71,15 +62,6 @@
     <ClInclude Include="text.h">
       <Filter>Utils</Filter>
     </ClInclude>
-    <ClInclude Include="Color.h">
-      <Filter>Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="SDL.h">
-      <Filter>Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="Debug.h">
-      <Filter>Engine</Filter>
-    </ClInclude>
     <ClInclude Include="DialogBox.h">
       <Filter>Engine</Filter>
     </ClInclude>
@@ -88,12 +70,6 @@
     </ClInclude>
     <ClInclude Include="BaseGame.h">
       <Filter>Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="ResourceManager.h">
-      <Filter>Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="ResourceNotLoadedException.h">
-      <Filter>Engine\Exceptions</Filter>
     </ClInclude>
     <ClInclude Include="World.h">
       <Filter>Game</Filter>

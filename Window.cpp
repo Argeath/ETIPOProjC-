@@ -5,19 +5,30 @@ using namespace Engine;
 
 Window* Window::activeWindow = nullptr;
 
+text_info* getTextInfo() {
+	text_info* info = new text_info;
+	gettextinfo(info);
+	return info;
+}
+
+void Window::clearWindow()
+{
+	text_info* info = getTextInfo();
+
+	for (int y = 1; y < info->screenheight; y++) {
+		for (int x = 1; x < info->screenwidth; x++) {
+			gotoxy(x, y);
+			putch(' ');
+		}
+	}
+	delete info;
+}
+
+
 Window::Window() : dialogBox(nullptr) {
-	frames = fpsTimer = fps = quit = worldTime = delta = t1 = t2 = rc = 0;
-	screen = nullptr;
-	scrtex = nullptr;
-	window = nullptr;
-	renderer = nullptr;
+	quit = worldTime = 0;
 
-	resourceManager = new ResourceManager;
 	game = new Game::World(this);
-
-	#ifdef DEBUG_MODE
-	debug = new Debug();
-	#endif
 }
 
 Window::~Window() {
@@ -25,126 +36,32 @@ Window::~Window() {
 	if (dialogBox != nullptr)
 		delete dialogBox;
 
-	#ifdef DEBUG_MODE
-	delete debug;
-	#endif
-
 	if(activeWindow == this)
 		activeWindow = nullptr;
 }
 
 int Window::init() {
-	if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
-		printf( "SDL_Init error: %s\n", SDL_GetError());
-		return 1;
-	}
-	int flags = IMG_INIT_PNG;
-	if (IMG_Init(IMG_INIT_PNG) & flags != flags) {
-		printf("IMG_Init error: %s\n", IMG_GetError());
-		return 1;
-	}
-
-	rc = SDL_CreateWindowAndRenderer(SCREEN_WIDTH, SCREEN_HEIGHT, 0, &window, &renderer);
-	if (rc != 0) {
-		SDL_Quit();
-		printf("SDL_CreateWindowAndRenderer error: %s\n", SDL_GetError());
-		return 1;
-	}
-
-	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
-	SDL_RenderSetLogicalSize(renderer, SCREEN_WIDTH, SCREEN_HEIGHT);
-	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-
-	SDL_SetWindowTitle(window, "POGame - Dominik Kinal 160589");
-
-	screen = SDL_CreateRGBSurface(0, SCREEN_WIDTH, SCREEN_HEIGHT, 32, 0x00FF0000, 0x0000FF00, 0x000000FF, 0xFF000000);
-
-	scrtex = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, SCREEN_WIDTH, SCREEN_HEIGHT);
-
-	// wy³¹czenie widocznoœci kursora myszy
-	SDL_ShowCursor(SDL_DISABLE);
-
-	Color::init(screen);
-
-	// wczytanie obrazka cs8x8.bmp
-	try {
-		int charsetId = resourceManager->AddResource("./images/cs8x8.bmp", "charset");
-
-		SDL_SetColorKey(resourceManager->getResourceByIndex(charsetId)->source, true, 0x000000);
-
-		resourceManager->AddResource("./images/grass.png", "grass");
-		resourceManager->AddResource("./images/guarana.png", "guarana");
-		resourceManager->AddResource("./images/wolfberry.png", "wolfberry");
-		resourceManager->AddResource("./images/mlecz.png", "mlecz");
-		resourceManager->AddResource("./images/wolf.png", "wolf");
-		resourceManager->AddResource("./images/sheep.png", "sheep");
-		resourceManager->AddResource("./images/sheep.png", "turtle");
-		resourceManager->AddResource("./images/antelope.png", "antelope");
-		resourceManager->AddResource("./images/knight.png", "knight");
-	} catch(ResourceNotLoadedException ex)
-	{
-		printf("Exception: %s\n", ex.what());
-		quitWindow();
-		return 1;
-	}
-
-	t1 = SDL_GetTicks();
-
-	printf("abc");
+	
 
 	return 0;
 }
 
 void Window::loop() {
+	int input;
+
 	while (!quit) {
-		t2 = SDL_GetTicks();
+		if (kbhit() != 0)
+		{
+			input = getch();
+			if (dialogBox != nullptr)
+				dialogBox->handleKeys(input);
+			else
+			{
+				if (input == 'q')
+					quitWindow();
 
-		// w tym momencie t2-t1 to czas w milisekundach,
-		// jaki uplyna³ od ostatniego narysowania ekranu
-		// delta to ten sam czas w sekundach
-		delta = (t2 - t1) * 0.001;
-		t1 = t2;
-
-		worldTime += delta;
-
-		SDL_FillRect(screen, nullptr, Color::czarny);
-
-		fpsTimer += delta;
-		if (fpsTimer > 0.3) {
-			fps = frames * 2;
-			frames = 0;
-			fpsTimer -= 0.3;
+			}
 		}
-
-		DrawRectangle(0, 0, GAME_WIDTH, GAME_HEIGHT, Color::trawiasty, Color::trawiasty);
-
-		DrawLine(0, 100, GAME_WIDTH, 1, 0, Color::czerwony);
-		DrawLine(100, 0, GAME_HEIGHT, 0, 1, Color::czerwony);
-		DrawSurface(resourceManager->getResourceByName("grass")->source, 100, 100);
-
-		if (game != nullptr) {
-			game->update(delta);
-
-			game->render();
-
-			renderWindow();
-
-			#ifdef DEBUG_MODE
-			debug->drawDebugElements();
-			#endif
-		}
-
-		if(dialogBox != nullptr)
-			dialogBox->render();
-
-		SDL_UpdateTexture(scrtex, nullptr, screen->pixels, screen->pitch);
-		//		SDL_RenderClear(renderer);
-		SDL_RenderCopy(renderer, scrtex, nullptr, nullptr);
-		SDL_RenderPresent(renderer);
-
-		pollEvents();
-		
-		frames++;
 	}
 }
 
@@ -181,11 +98,11 @@ void Window::showWindow(DialogBoxType type) {
 		box->answer = "Czy chcesz zagrac ponownie?";
 		box->size.x = 300;
 
-		box->yesKey = SDLK_t;
+		box->yesKey = 't';
 		box->yesText = "Tak";
-		box->noKey = SDLK_n;
+		box->noKey = 'n';
 		box->noText = "Nie";
-		box->thirdKey = SDLK_l;
+		box->thirdKey = 'l';
 		box->thirdText = "Wczytaj";
 
 		box->successCallback = &finishGameSuccess;
@@ -211,34 +128,6 @@ void Window::showWindow(DialogBoxType type) {
 	}
 }
 
-void Window::pollEvents() {
-	while (SDL_PollEvent(&event)) {
-		switch (event.type) {
-		case SDL_KEYDOWN: {
-			if (dialogBox != nullptr) dialogBox->handleKeys(event.key.keysym.sym);
-			else if (event.key.keysym.sym == SDLK_ESCAPE) quit = 1;
-			//else game->handleKeys(event.key.keysym.sym);
-			break;
-		}
-		case SDL_KEYUP:
-			break;
-		case SDL_QUIT:
-			quit = 1;
-			break;
-		}
-	}
-}
-
 void Window::quitWindow() {
 	quit = true;
-
-	delete resourceManager;
-
-	SDL_FreeSurface(screen);
-	SDL_DestroyTexture(scrtex);
-	SDL_DestroyRenderer(renderer);
-	SDL_DestroyWindow(window);
-
-	IMG_Quit();
-	SDL_Quit();
 }
