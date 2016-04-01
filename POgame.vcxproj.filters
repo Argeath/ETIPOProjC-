@@ -22,6 +22,12 @@
     <Filter Include="Engine\Exceptions">
       <UniqueIdentifier>{0bed9b84-7a20-4364-8c85-ecc74db8b14f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game">
+      <UniqueIdentifier>{fbb7f997-b7cd-4477-a3f4-d5d464e7aa09}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Organisms">
+      <UniqueIdentifier>{3724d1cf-b732-40d4-abc2-dfb7b55c1ce7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -44,6 +50,15 @@
     </ClCompile>
     <ClCompile Include="Window.cpp">
       <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="World.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Organism.cpp">
+      <Filter>Game\Organisms</Filter>
+    </ClCompile>
+    <ClCompile Include="Wolf.cpp">
+      <Filter>Game\Organisms</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -79,6 +94,15 @@
     </ClInclude>
     <ClInclude Include="ResourceNotLoadedException.h">
       <Filter>Engine\Exceptions</Filter>
+    </ClInclude>
+    <ClInclude Include="World.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Organism.h">
+      <Filter>Game\Organisms</Filter>
+    </ClInclude>
+    <ClInclude Include="Wolf.h">
+      <Filter>Game\Organisms</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

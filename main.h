@@ -1,11 +1,5 @@
 #pragma once
 
-/*
-
-TILESET SOURCE: http://opengameart.org/content/lpc-tile-atlas
-
-*/
-
 enum EVENT_KEY {
 	NONE, LEFT, RIGHT, UP, DOWN, SPECIAL
 };
@@ -45,3 +39,8 @@ enum EVENT_KEY {
 #include "ResourceManager.h"
 #include "BaseGame.h"
 #include "Window.h"
+
+#include "Organism.h"
+#include "Wolf.h"
+#include "World.h"
+

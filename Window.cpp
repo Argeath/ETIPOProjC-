@@ -13,7 +13,7 @@ Window::Window() : dialogBox(nullptr) {
 	renderer = nullptr;
 
 	resourceManager = new ResourceManager;
-	game = nullptr;
+	game = new Game::World(this);
 
 	#ifdef DEBUG_MODE
 	debug = new Debug();
@@ -66,7 +66,6 @@ int Window::init() {
 
 	Color::init(screen);
 
-	printf("abc");
 	// wczytanie obrazka cs8x8.bmp
 	try {
 		int charsetId = resourceManager->AddResource("./images/cs8x8.bmp", "charset");
@@ -126,7 +125,7 @@ void Window::loop() {
 		if (game != nullptr) {
 			game->update(delta);
 
-			game->render(screen, resourceManager);
+			game->render();
 
 			renderWindow();
 
@@ -155,7 +154,7 @@ void Window::renderWindow() {
 
 void finishGameSuccess() {
 	//delete Window::getInstance()->game;
-	//Window::getInstance()->game = new Game();
+	//Window::getInstance()->game = new World();
 
 	delete Window::getActiveWindow()->dialogBox;
 	Window::getActiveWindow()->dialogBox = nullptr;

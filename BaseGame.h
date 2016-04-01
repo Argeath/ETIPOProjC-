@@ -6,15 +6,14 @@ namespace Engine
 
 	class BaseGame
 	{
-	protected:
+	public:
 		Window* window;
 
-	public:
 		virtual ~BaseGame() {}
 
 		BaseGame(Window* win) : window(win) {}
 
 		virtual void update(double deltaTime) = 0;
-		virtual void render(SDL_Surface* screen, ResourceManager* manager) = 0;
+		virtual void render() = 0;
 	};
 }
