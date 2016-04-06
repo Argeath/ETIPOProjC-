@@ -3,12 +3,12 @@
 using namespace Utils;
 using namespace Engine;
 
-void DialogBox::renderWindow() const
+void ADialogBox::renderWindow() const
 {
 
 }
 
-void DialogBox::closeWindow() {
+void ADialogBox::closeWindow() {
 	if (Window::getActiveWindow()->dialogBox == this) {
 		Window::getActiveWindow()->dialogBox = nullptr;
 		delete this;

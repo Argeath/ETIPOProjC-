@@ -6,7 +6,7 @@ namespace Game {
 	public:
 
 		Wolf(World* w) : Organism(w) {
-			spriteName = "wolf";
+			sign = 'W';
 			strength = 9;
 			initiative = 5;
 		}

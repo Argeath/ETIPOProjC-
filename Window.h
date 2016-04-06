@@ -9,8 +9,14 @@ namespace Engine {
 	public:
 		int quit;
 		double worldTime;
-		DialogBox *dialogBox;
+		ADialogBox *dialogBox;
 		BaseGame* game;
+		bool hasColors;
+
+		Utils::Vector2<int> windowSize;
+		Utils::Vector2<int> centerPosition;
+		Utils::Vector2<int> mapStart;
+		Utils::Vector2<int> mapEnd;
 
 		Window();
 		~Window();
@@ -18,7 +24,6 @@ namespace Engine {
 		int init();
 		void loop();
 		void renderWindow();
-		void pollEvents();
 		void quitWindow();
 		void showWindow(DialogBoxType type);
 

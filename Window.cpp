@@ -5,23 +5,17 @@ using namespace Engine;
 
 Window* Window::activeWindow = nullptr;
 
-text_info* getTextInfo() {
-	text_info* info = new text_info;
-	gettextinfo(info);
-	return info;
-}
-
 void Window::clearWindow()
 {
-	text_info* info = getTextInfo();
+	//text_info* info = getTextInfo();
 
-	for (int y = 1; y < info->screenheight; y++) {
+	/*for (int y = 1; y < info->screenheight; y++) {
 		for (int x = 1; x < info->screenwidth; x++) {
 			gotoxy(x, y);
 			putch(' ');
 		}
 	}
-	delete info;
+	delete info;*/
 }
 
 
@@ -38,35 +32,62 @@ Window::~Window() {
 
 	if(activeWindow == this)
 		activeWindow = nullptr;
+
+	if (game != nullptr)
+		delete game;
 }
 
 int Window::init() {
-	
+	initscr();
+	resize_term(((MAP_HEIGHT < MAX_HEIGHT) ? MAP_HEIGHT : MAX_HEIGHT) + 2, ((MAP_WIDTH < MAX_WIDTH) ? MAP_WIDTH : MAX_WIDTH) * 2 + 4);
+	keypad(stdscr, true);
+	noecho();
+
+	hasColors = has_colors();
+
+	int row, col;
+	getmaxyx(stdscr, row, col);
+
+	centerPosition = V2(MAP_WIDTH / 2, MAP_HEIGHT / 2);
+	windowSize = V2(col, row);
+	mapStart = V2(2, 1);
+	mapEnd = windowSize - V2(2, 1);
+
+	renderWindow();
+	refresh();
 
 	return 0;
 }
 
 void Window::loop() {
 	int input;
+	game->render();
+	refresh();
 
 	while (!quit) {
-		if (kbhit() != 0)
+		input = getch();
+		if (dialogBox != nullptr)
+			dialogBox->handleKeys(input);
+		else
 		{
-			input = getch();
-			if (dialogBox != nullptr)
-				dialogBox->handleKeys(input);
-			else
-			{
-				if (input == 'q')
-					quitWindow();
-
-			}
+			if (input == 'q')
+				quitWindow();
 		}
+		game->render();
+		refresh();
 	}
+	endwin();
 }
 
 void Window::renderWindow() {
-	
+	for (int iy = 0; iy < windowSize.y; iy++) {
+		move(iy, 0);
+		for (int ix = 0; ix < windowSize.x; ix++) {
+			if (iy >= 1 && iy < windowSize.y - 1 && ix > 1 && ix < windowSize.x - 2) continue;
+			if (iy >= 1 && iy < windowSize.y - 1 && ix > windowSize.x - 3) move(iy, ix);
+			addch('#');
+		}
+	}
 }
 
 void finishGameSuccess() {

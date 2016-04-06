@@ -4,16 +4,16 @@ namespace Engine {
 
 	typedef void(*CallbackFunction)();
 
-	class DialogBox {
+	class ADialogBox {
 	public:
-		virtual ~DialogBox() {}
+		virtual ~ADialogBox() {}
 
 		Utils::Text answer;
 		Utils::Vector2<int> size;
 		CallbackFunction successCallback;
 		CallbackFunction failureCallback;
 
-		DialogBox() : size(V2(600, 60)), successCallback(nullptr), failureCallback(nullptr) {}
+		ADialogBox() : size(V2(600, 60)), successCallback(nullptr), failureCallback(nullptr) {}
 
 		virtual void handleKeys(char key) = 0;
 		virtual void render() = 0;
@@ -21,7 +21,7 @@ namespace Engine {
 		void closeWindow();
 	};
 
-	class InputDialogBox : public DialogBox {
+	class InputDialogBox : public ADialogBox {
 	public:
 		Utils::Text inputText;
 		int limitCharacters;
@@ -32,7 +32,7 @@ namespace Engine {
 		void render() override;
 	};
 
-	class InfoDialogBox : public DialogBox {
+	class InfoDialogBox : public ADialogBox {
 	public:
 		char yesKey, noKey, thirdKey;
 		Utils::Text yesText, noText, thirdText;

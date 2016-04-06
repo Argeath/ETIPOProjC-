@@ -7,12 +7,12 @@ namespace Game {
 	public:
 		virtual ~Organism() {}
 
-		Organism(World* w) : strength(0), initiative(0), spriteName(""), world(w) {}
+		Organism(World* w) : strength(0), initiative(0), sign('x'), world(w) {}
 
 		int strength;
 		int initiative;
 		Utils::Vector2<int> position;
-		char* spriteName;
+		char sign;
 
 		virtual void action() = 0;
 		virtual void collision() = 0;

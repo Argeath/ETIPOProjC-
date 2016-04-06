@@ -63,8 +63,9 @@ namespace Utils {
 		}
 
 		friend Vector2 operator+(Vector2 lhs, const Vector2 &v) {
-			lhs += v;
-			return lhs;
+			Vector2 n = lhs;
+			n += v;
+			return n;
 		}
 
 		Vector2& operator-=(const Vector2& rhs)
@@ -75,8 +76,9 @@ namespace Utils {
 		}
 
 		friend Vector2 operator-(Vector2 lhs, const Vector2 &v) {
-			lhs -= v;
-			return lhs;
+			Vector2 n = lhs;
+			n -= v;
+			return n;
 		}
 
 		Vector2& operator*=(const Vector2& rhs)
@@ -87,8 +89,9 @@ namespace Utils {
 		}
 
 		friend Vector2 operator*(Vector2 lhs, const Vector2 &v) {
-			lhs *= v;
-			return lhs;
+			Vector2 n = lhs;
+			n *= v;
+			return n;
 		}
 
 		Vector2& operator/=(const Vector2& rhs)
@@ -99,8 +102,9 @@ namespace Utils {
 		}
 
 		friend Vector2 operator/(Vector2 lhs, const Vector2 &v) {
-			lhs /= v;
-			return lhs;
+			Vector2 n = lhs;
+			n /= v;
+			return n;;
 		}
 
 		Vector2& operator*=(const T& rhs)
@@ -111,8 +115,9 @@ namespace Utils {
 		}
 
 		friend Vector2 operator*(Vector2 lhs, const T &c) {
-			lhs *= c;
-			return lhs;
+			Vector2 n = lhs;
+			n *= c;
+			return n;
 		}
 
 
@@ -124,8 +129,9 @@ namespace Utils {
 		}
 
 		friend Vector2 operator/(Vector2 lhs, const T &c) {
-			lhs /= c;
-			return lhs;
+			Vector2 n = lhs;
+			n /= c;
+			return n;
 		}
 
 		friend bool operator==(const Vector2 &v1, const Vector2 &v2) {
