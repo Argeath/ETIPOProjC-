@@ -16,15 +16,15 @@ void Animal::action()
 			collision(collider, true);
 
 		world->moveOrganism(this, dir);
-	} catch(Engine::InterruptActionException* e) {}
+	} catch(const Engine::InterruptActionException& e) {}
 }
 
 void Animal::collision(Organism* target, bool isAttacker /* = false */)
 {
-	if (target->getType() == getType() && getType() != HUMAN && age > 10 && target->age > 10)
+	if (timeSinceLastBreed > 10 && target->timeSinceLastBreed > 10 && getType() != HUMAN && target->getType() == getType())
 	{
-		breed();
-		throw new Engine::InterruptActionException();
+		breed(target);
+		throw Engine::InterruptActionException();
 	}
 
 	if (target->getType() == getType()) return; // Bez kanibalizu
@@ -32,10 +32,10 @@ void Animal::collision(Organism* target, bool isAttacker /* = false */)
 	if(isAttacker)
 		target->collision(this);
 
-	if (strength > target->strength)
+	if (strength > target->strength || isAttacker && strength >= target->strength)
 		target->isDieing = true;
 	else if (strength < target->strength && isAttacker) {
 		isDieing = true;
-		throw new Engine::InterruptActionException();
+		throw Engine::InterruptActionException();
 	}
 }

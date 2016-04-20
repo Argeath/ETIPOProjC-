@@ -3,7 +3,8 @@
 namespace Game {
 	class World : public Engine::BaseGame
 	{
-		std::list<Organism*> organisms;
+		std::vector<Organism*> organisms;
+		std::vector<Organism*> toBorn;
 		Organism*** organismMap;
 
 		void render() override;

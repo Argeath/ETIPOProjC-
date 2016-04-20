@@ -15,8 +15,8 @@
 #include <stdlib.h>
 #include <time.h>
 #include <string.h>
+#include <algorithm>
 #include <vector>
-#include <list>
 #include <exception>
 #include <iostream>
 #include <windows.h>

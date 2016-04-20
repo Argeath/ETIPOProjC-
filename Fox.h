@@ -15,7 +15,7 @@ namespace Game {
 			if(isAttacker && target->strength > strength)
 			{
 				action();
-				throw new Engine::InterruptActionException();
+				throw Engine::InterruptActionException();
 			}
 
 			Animal::collision(target, isAttacker);

@@ -1,26 +1,36 @@
 #include "main.h"
 
+using namespace std;
 using namespace Game;
 using namespace Utils;
 
 void World::update()
 {
-	organisms.sort(compareOrganismsByInitiative);
+	sort(organisms.begin(), organisms.end(), compareOrganismsByInitiative);
 
-	std::list<Organism*>::iterator it = organisms.begin();
-	while(it != organisms.end())
-	{
+	for (vector<Organism*>::const_iterator it = organisms.begin(); it != organisms.end(); ++it) {
+		if ( ! (*it)->isDieing) {
+			(*it)->age++;
+			(*it)->timeSinceLastBreed++;
+			(*it)->action();
+		}
+	}
+
+	for (vector<Organism*>::const_iterator it = organisms.begin(); it != organisms.end();) {
 		if ((*it)->isDieing) {
-			organismMap[(*it)->position.y][(*it)->position.x] = nullptr;
+			if (organismMap[(*it)->position.y][(*it)->position.x] == *it)
+				organismMap[(*it)->position.y][(*it)->position.x] = nullptr;
 			delete *it;
 			it = organisms.erase(it);
 		}
-		else {
-			(*it)->age++;
-			(*it)->action();
-			++it;
-		}
+		else ++it;
 	}
+
+	for (vector<Organism*>::const_iterator it = toBorn.begin(); it != toBorn.end(); ++it) {
+		organisms.push_back(*it);
+	}
+	toBorn.clear();
+
 	render();
 }
 
@@ -87,7 +97,7 @@ void World::createOrganism(OrganismType type)
 void World::addOrganism(Organism* organism)
 {
 	if (getOrganismOnPos(organism->position) == nullptr) {
-		organisms.push_back(organism);
+		toBorn.push_back(organism);
 		organismMap[organism->position.y][organism->position.x] = organism;
 	}
 }

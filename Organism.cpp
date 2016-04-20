@@ -21,7 +21,7 @@ Direction Organism::getRandomDirection(bool mustBeEmpty) const
 	return possible_directions[rand() % n];
 }
 
-void Organism::breed()
+void Organism::breed(Organism* otherParent)
 {
 	Direction dir = getRandomDirection(true);
 	if (dir == Direction::NONE) return;
@@ -31,6 +31,10 @@ void Organism::breed()
 
 	organism->position = position + dir;
 	world->addOrganism(organism);
+
+	timeSinceLastBreed = 0;
+	if(otherParent != nullptr)
+		otherParent->timeSinceLastBreed = 0;
 }
 
 Organism* Organism::getOrganismByType(OrganismType type, World* world)

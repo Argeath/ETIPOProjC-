@@ -34,12 +34,13 @@ namespace Game {
 	public:
 		virtual ~Organism() {}
 
-		Organism(World* w) : age(0), strength(0), initiative(0), isDieing(false), world(w)
+		Organism(World* w) : age(0), timeSinceLastBreed(0), strength(0), initiative(0), isDieing(false), world(w)
 		{
 			appearance = OrganismAppearance();
 		}
 
 		int age;
+		int timeSinceLastBreed;
 		int strength;
 		int initiative;
 		Utils::Vector2<int> position;
@@ -48,7 +49,7 @@ namespace Game {
 
 
 		Utils::Direction getRandomDirection(bool mustBeEmpty = false) const;
-		void breed();
+		void breed(Organism* otherParent = nullptr);
 
 		static Organism* getOrganismByType(OrganismType type, World* world);
 
