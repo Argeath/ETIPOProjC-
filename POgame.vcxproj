@@ -154,8 +154,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Animal.cpp" />
     <ClCompile Include="DialogBox.cpp" />
-    <ClCompile Include="Wolf.cpp" />
+    <ClCompile Include="Plant.cpp" />
     <ClCompile Include="World.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Organism.cpp" />
@@ -163,9 +164,20 @@
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Animal.h" />
+    <ClInclude Include="Antelope.h" />
     <ClInclude Include="BaseGame.h" />
     <ClInclude Include="DialogBox.h" />
+    <ClInclude Include="Fox.h" />
+    <ClInclude Include="Grass.h" />
+    <ClInclude Include="Guarana.h" />
+    <ClInclude Include="InterruptActionException.h" />
+    <ClInclude Include="Plant.h" />
+    <ClInclude Include="Sheep.h" />
+    <ClInclude Include="SowThistle.h" />
+    <ClInclude Include="Turtle.h" />
     <ClInclude Include="Wolf.h" />
+    <ClInclude Include="Wolfberry.h" />
     <ClInclude Include="World.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="Organism.h" />

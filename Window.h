@@ -27,8 +27,6 @@ namespace Engine {
 		void quitWindow();
 		void showWindow(DialogBoxType type);
 
-		static void clearWindow();
-
 		static Window* getActiveWindow() {
 			return activeWindow;
 		}

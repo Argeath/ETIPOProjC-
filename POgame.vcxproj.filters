@@ -48,7 +48,10 @@
     <ClCompile Include="Organism.cpp">
       <Filter>Game\Organisms</Filter>
     </ClCompile>
-    <ClCompile Include="Wolf.cpp">
+    <ClCompile Include="Animal.cpp">
+      <Filter>Game\Organisms</Filter>
+    </ClCompile>
+    <ClCompile Include="Plant.cpp">
       <Filter>Game\Organisms</Filter>
     </ClCompile>
   </ItemGroup>
@@ -78,6 +81,39 @@
       <Filter>Game\Organisms</Filter>
     </ClInclude>
     <ClInclude Include="Wolf.h">
+      <Filter>Game\Organisms</Filter>
+    </ClInclude>
+    <ClInclude Include="Animal.h">
+      <Filter>Game\Organisms</Filter>
+    </ClInclude>
+    <ClInclude Include="Plant.h">
+      <Filter>Game\Organisms</Filter>
+    </ClInclude>
+    <ClInclude Include="Grass.h">
+      <Filter>Game\Organisms</Filter>
+    </ClInclude>
+    <ClInclude Include="Guarana.h">
+      <Filter>Game\Organisms</Filter>
+    </ClInclude>
+    <ClInclude Include="Wolfberry.h">
+      <Filter>Game\Organisms</Filter>
+    </ClInclude>
+    <ClInclude Include="SowThistle.h">
+      <Filter>Game\Organisms</Filter>
+    </ClInclude>
+    <ClInclude Include="InterruptActionException.h">
+      <Filter>Engine\Exceptions</Filter>
+    </ClInclude>
+    <ClInclude Include="Sheep.h">
+      <Filter>Game\Organisms</Filter>
+    </ClInclude>
+    <ClInclude Include="Turtle.h">
+      <Filter>Game\Organisms</Filter>
+    </ClInclude>
+    <ClInclude Include="Antelope.h">
+      <Filter>Game\Organisms</Filter>
+    </ClInclude>
+    <ClInclude Include="Fox.h">
       <Filter>Game\Organisms</Filter>
     </ClInclude>
   </ItemGroup>

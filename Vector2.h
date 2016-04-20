@@ -13,7 +13,8 @@ namespace Utils {
 		SOUTHWEST,
 		SOUTHEAST,
 		NORTHWEST,
-		NORTHEAST
+		NORTHEAST,
+		NONE
 	};
 
 	template<typename T>
@@ -23,7 +24,9 @@ namespace Utils {
 		T y;
 
 		Vector2() : x(0), y(0) {}
+
 		Vector2(T a, T b) : x(a), y(b) {}
+
 		Vector2(Direction dir) : x(0), y(0) {
 			switch (dir) {
 			case NORTHEAST:
@@ -47,6 +50,8 @@ namespace Utils {
 				y = 1;
 			case WEST:
 				x = -1;
+				break;
+			default:
 				break;
 			}
 		}

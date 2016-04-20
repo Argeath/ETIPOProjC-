@@ -5,20 +5,6 @@ using namespace Engine;
 
 Window* Window::activeWindow = nullptr;
 
-void Window::clearWindow()
-{
-	//text_info* info = getTextInfo();
-
-	/*for (int y = 1; y < info->screenheight; y++) {
-		for (int x = 1; x < info->screenwidth; x++) {
-			gotoxy(x, y);
-			putch(' ');
-		}
-	}
-	delete info;*/
-}
-
-
 Window::Window() : dialogBox(nullptr) {
 	quit = worldTime = 0;
 
@@ -44,6 +30,20 @@ int Window::init() {
 	noecho();
 
 	hasColors = has_colors();
+
+	if(hasColors)
+	{
+		start_color();
+		init_pair(1, COLOR_WHITE, COLOR_BLACK);
+		init_pair(2, COLOR_GREEN, COLOR_GREEN);
+		init_pair(3, COLOR_RED, COLOR_GREEN);
+		init_pair(4, COLOR_MAGENTA, COLOR_GREEN);
+		init_pair(5, COLOR_YELLOW, COLOR_GREEN);
+		init_pair(6, COLOR_WHITE, COLOR_RED);
+		init_pair(7, COLOR_BLACK, COLOR_YELLOW);
+		init_pair(8, COLOR_BLACK, COLOR_WHITE);
+		init_pair(9, COLOR_CYAN, COLOR_YELLOW);
+	}
 
 	int row, col;
 	getmaxyx(stdscr, row, col);
@@ -73,7 +73,7 @@ void Window::loop() {
 			if (input == 'q')
 				quitWindow();
 		}
-		game->render();
+		game->update();
 		refresh();
 	}
 	endwin();
