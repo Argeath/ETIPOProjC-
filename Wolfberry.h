@@ -8,10 +8,11 @@ namespace Game
 		Wolfberry(World* w) : Plant(w) {
 			appearance.sign = 'W';
 			appearance.colors = COLOR_PAIR(4) | A_BOLD;
-			strength = 99;
+			strength = 999;
 		}
 
-		void collision(Organism*, bool isAttacker = false) override {
+		void collision(Organism* target, bool isAttacker = false) override {
+			target->isDieing = true;
 			isDieing = true;
 		}
 		OrganismType getType() override { return WOLFBERRY; }

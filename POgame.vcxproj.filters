@@ -54,6 +54,12 @@
     <ClCompile Include="Plant.cpp">
       <Filter>Game\Organisms</Filter>
     </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>Game\Organisms</Filter>
+    </ClCompile>
+    <ClCompile Include="Logs.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -115,6 +121,12 @@
     </ClInclude>
     <ClInclude Include="Fox.h">
       <Filter>Game\Organisms</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>Game\Organisms</Filter>
+    </ClInclude>
+    <ClInclude Include="Logs.h">
+      <Filter>Engine</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

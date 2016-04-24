@@ -156,7 +156,9 @@
   <ItemGroup>
     <ClCompile Include="Animal.cpp" />
     <ClCompile Include="DialogBox.cpp" />
+    <ClCompile Include="Logs.cpp" />
     <ClCompile Include="Plant.cpp" />
+    <ClCompile Include="Player.cpp" />
     <ClCompile Include="World.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Organism.cpp" />
@@ -172,7 +174,9 @@
     <ClInclude Include="Grass.h" />
     <ClInclude Include="Guarana.h" />
     <ClInclude Include="InterruptActionException.h" />
+    <ClInclude Include="Logs.h" />
     <ClInclude Include="Plant.h" />
+    <ClInclude Include="Player.h" />
     <ClInclude Include="Sheep.h" />
     <ClInclude Include="SowThistle.h" />
     <ClInclude Include="Turtle.h" />

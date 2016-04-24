@@ -3,46 +3,53 @@
 using namespace Utils;
 
 Text::Text() {
-	string = (char*)malloc(sizeof(char));
+	string = new char[1];
+	//string = (char*)malloc(sizeof(char));
 	string[0] = '\0';
 }
 
 Text::Text(const char* str) {
 	int size = strlen(str);
-	string = (char*)malloc(sizeof(char) * (size + 1));
+	string = new char[size + 1];
+	//string = (char*)malloc(sizeof(char) * (size + 1));
 	strcpy(string, str);
 }
 
 Text::Text(char* str) {
 	int size = strlen(str);
-	string = (char*)malloc(sizeof(char) * (size + 1));
+	string = new char[size + 1];
+	//string = (char*)malloc(sizeof(char) * (size + 1));
 	strcpy(string, str);
 }
 
 Text::Text(char c) {
-	string = (char*)malloc(sizeof(char) * 2);
+	string = new char[2];
+	//string = (char*)malloc(sizeof(char) * 2);
 	string[0] = c;
 	string[1] = '\0';
 }
 
 Text::Text(int i) {
-	string = (char*)malloc(sizeof(int));
+	string = new char[12];
+	//string = (char*)malloc(sizeof(int));
 	itoa(i, string, 10);
 }
 
 Text::Text(const Text &str) {
 	int size = strlen(str.string);
-	string = (char*)malloc(sizeof(char) * (size + 1));
+	string = new char[size + 1];
+	//string = (char*)malloc(sizeof(char) * (size + 1));
 	strcpy(string, str.string);
 }
 
 Text::~Text() {
-	free(string);
+	 delete[] string;
 }
 
 void Text::clear() {
-	free(string);
-	string = (char*)malloc(sizeof(char));
+	delete[] string;
+	string = new char[1];
+	//string = (char*)malloc(sizeof(char));
 	string[0] = 0;
 }
 
@@ -65,19 +72,21 @@ bool Text::isEmpty() const
 }
 
 void Text::cpy(char* str) {
-	free(string);
+	delete[] string;
 	int size = strlen(str);
-	string = (char*)malloc(sizeof(char) * (size + 1));
+	string = new char[size + 1];
+	//string = (char*)malloc(sizeof(char) * (size + 1));
 	strcpy(string, str);
 }
 
 void Text::cat(char* str) {
 	int size = length() + strlen(str);
-	char* tmp = (char*)malloc(sizeof(char) * (size + 1));
+	char* tmp = new char[size + 1];
+	//char* tmp = (char*)malloc(sizeof(char) * (size + 1));
 
 	strcpy(tmp, string);
 	strcat(tmp, str);
 
-	free(string);
+	delete[] string;
 	string = tmp;
 }

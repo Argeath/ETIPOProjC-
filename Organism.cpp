@@ -32,9 +32,13 @@ void Organism::breed(Organism* otherParent)
 	organism->position = position + dir;
 	world->addOrganism(organism);
 
-	timeSinceLastBreed = 0;
-	if(otherParent != nullptr)
-		otherParent->timeSinceLastBreed = 0;
+	Animal* thisAnimal = (Animal*)this;
+	if(thisAnimal != nullptr)
+		thisAnimal->timeSinceLastBreed = 0;
+	if (otherParent != nullptr) {
+		Animal* otherAnimal = (Animal*)otherParent;
+		otherAnimal->timeSinceLastBreed = 0;
+	}
 }
 
 Organism* Organism::getOrganismByType(OrganismType type, World* world)
@@ -42,6 +46,9 @@ Organism* Organism::getOrganismByType(OrganismType type, World* world)
 	Organism* organism = nullptr;
 	switch (type)
 	{
+	case HUMAN:
+		organism = new Player(world);
+		break;
 	case WOLF:
 		organism = new Wolf(world);
 		break;
@@ -69,7 +76,40 @@ Organism* Organism::getOrganismByType(OrganismType type, World* world)
 	case WOLFBERRY:
 		organism = new Wolfberry(world);
 		break;
+	case NONE:
+	default: 
+		break;
 	}
 
 	return organism;
+}
+
+Utils::Text Organism::getOrganismNameByType(OrganismType type)
+{
+	switch (type)
+	{
+	case HUMAN:
+		return "Player";
+	case WOLF:
+		return "Wolf";
+	case SHEEP:
+		return "Sheep";
+	case TURTLE:
+		return "Turtle";
+	case ANTELOPE:
+		return "Antelope";
+	case FOX:
+		return "Fox";
+	case GRASS:
+		return "Grass";
+	case GUARANA:
+		return "Guarana";
+	case SOW_THISTLE:
+		return "Sow Thistle";
+	case WOLFBERRY:
+		return "Wolfberry";
+	case NONE:
+	default:
+		return "Unknown";
+	}
 }

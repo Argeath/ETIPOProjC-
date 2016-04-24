@@ -11,6 +11,7 @@ namespace Engine {
 		double worldTime;
 		ADialogBox *dialogBox;
 		BaseGame* game;
+		Logs* logs;
 		bool hasColors;
 
 		Utils::Vector2<int> windowSize;
@@ -26,6 +27,7 @@ namespace Engine {
 		void renderWindow();
 		void quitWindow();
 		void showWindow(DialogBoxType type);
+		void printLogs();
 
 		static Window* getActiveWindow() {
 			return activeWindow;

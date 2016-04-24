@@ -17,6 +17,14 @@ namespace Game {
 		}
 
 		void collision(Organism* target, bool isAttacker = false) override {
+			if(!isAttacker && target->getType() != getType())
+			{
+				int r = rand() % 100;
+				if (r < 50) {
+					action();
+					return;
+				}
+			}
 			Animal::collision(target, isAttacker);
 		}
 

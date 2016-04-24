@@ -13,7 +13,7 @@ namespace Engine
 
 		BaseGame(Window* win) : window(win) {}
 
-		virtual void update() = 0;
+		virtual void update(int input) = 0;
 		virtual void render() = 0;
 	};
 }

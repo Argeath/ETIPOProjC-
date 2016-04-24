@@ -148,19 +148,19 @@ namespace Utils {
 		}
 
 		friend bool operator>(const Vector2 &v1, const Vector2 &v2) {
-			return (v1.x > v2.x && v1.y > v2.y);
+			return (v1.x > v2.x || v1.y > v2.y);
 		}
 
 		friend bool operator<(const Vector2 &v1, const Vector2 &v2) {
-			return (v1.x < v2.x && v1.y < v2.y);
+			return (v1.x < v2.x || v1.y < v2.y);
 		}
 
 		friend bool operator>=(const Vector2 &v1, const Vector2 &v2) {
-			return (v1.x >= v2.x && v1.y >= v2.y);
+			return (v1.x >= v2.x || v1.y >= v2.y);
 		}
 
 		friend bool operator<=(const Vector2 &v1, const Vector2 &v2) {
-			return (v1.x <= v2.x && v1.y <= v2.y);
+			return (v1.x <= v2.x || v1.y <= v2.y);
 		}
 
 	};

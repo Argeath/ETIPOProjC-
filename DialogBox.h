@@ -1,19 +1,20 @@
 #pragma once
 
 namespace Engine {
-
+	class Window;
 	typedef void(*CallbackFunction)();
 
 	class ADialogBox {
 	public:
 		virtual ~ADialogBox() {}
 
+		Window* window;
 		Utils::Text answer;
 		Utils::Vector2<int> size;
 		CallbackFunction successCallback;
 		CallbackFunction failureCallback;
 
-		ADialogBox() : size(V2(600, 60)), successCallback(nullptr), failureCallback(nullptr) {}
+		ADialogBox(Window* w) : window(w), size(V2(600, 60)), successCallback(nullptr), failureCallback(nullptr) {}
 
 		virtual void handleKeys(char key) = 0;
 		virtual void render() = 0;
@@ -26,7 +27,7 @@ namespace Engine {
 		Utils::Text inputText;
 		int limitCharacters;
 
-		InputDialogBox() : limitCharacters(15) {}
+		InputDialogBox(Window* w) : ADialogBox(w), limitCharacters(15) {}
 
 		void handleKeys(char key) override;
 		void render() override;
@@ -39,13 +40,13 @@ namespace Engine {
 
 		CallbackFunction thirdCallback;
 
-		InfoDialogBox() {}
+		InfoDialogBox(Window* w) : ADialogBox(w) {}
 
 		void handleKeys(char key) override;
 		void render() override;
 	};
 
 	enum DialogBoxType {
-		FinishGame, Info, InputNameToRanking
+		FinishGame, Info, StartGame
 	};
 }

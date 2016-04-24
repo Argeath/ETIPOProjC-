@@ -8,6 +8,7 @@ namespace Game
 		Plant(World* w) : Organism(w) {}
 
 		void action() override;
-		void collision(Organism* target, bool isAttacker = false) override {};
+		void collision(Organism* target, bool isAttacker = false) override {}
+		void onDie() override {}
 	};
 }

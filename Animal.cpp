@@ -21,8 +21,11 @@ void Animal::action()
 
 void Animal::collision(Organism* target, bool isAttacker /* = false */)
 {
-	if (timeSinceLastBreed > 10 && target->timeSinceLastBreed > 10 && getType() != HUMAN && target->getType() == getType())
+	if (((Animal*)target) != nullptr && timeSinceLastBreed > 10 && ((Animal*)target)->timeSinceLastBreed > 10 && alreadyBornChilds < ANIMAL_MAX_CHILD 
+		&& ((Animal*)target)->alreadyBornChilds < ANIMAL_MAX_CHILD && getType() != HUMAN && target->getType() == getType())
 	{
+		alreadyBornChilds++;
+		((Animal*)target)->alreadyBornChilds++;
 		breed(target);
 		throw Engine::InterruptActionException();
 	}
@@ -32,10 +35,17 @@ void Animal::collision(Organism* target, bool isAttacker /* = false */)
 	if(isAttacker)
 		target->collision(this);
 
-	if (strength > target->strength || isAttacker && strength >= target->strength)
+	if (strength > target->strength || isAttacker && strength >= target->strength) {
 		target->isDieing = true;
+		target->onDie();
+
+		if(isAttacker)
+			world->window->logs->addLog(T("[") + T(world->round) + T("] ") + T(Organism::getOrganismNameByType(getType())) + T(" killed ") + T(Organism::getOrganismNameByType(target->getType())) + T("."));
+	}
 	else if (strength < target->strength && isAttacker) {
 		isDieing = true;
+		onDie();
+		world->window->logs->addLog(T("[") + T(world->round) + T("] ") + T(Organism::getOrganismNameByType(getType())) + T(" attacked ") + T(Organism::getOrganismNameByType(target->getType())) + T(" and died."));
 		throw Engine::InterruptActionException();
 	}
 }
