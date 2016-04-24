@@ -10,8 +10,11 @@ namespace Engine
 		std::deque<Utils::Text> items;
 		Window* window;
 
-		Logs(Window* w) : window(w) {}
+		Logs(Window* w) : window(w)
+		{
+		}
 
 		void addLog(Utils::Text item);
 	};
 }
+

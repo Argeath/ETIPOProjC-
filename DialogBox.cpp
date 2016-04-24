@@ -6,8 +6,10 @@ using namespace Engine;
 void ADialogBox::renderWindow() const
 {
 	Vector2<int> s = window->windowSize;
-	for (int iy = s.y / 2 - 5; iy < s.y / 2 + 5; iy++) {
-		for (int ix = 5; ix < s.x - 5; ix++) {
+	for (int iy = s.y / 2 - 5; iy < s.y / 2 + 5; iy++)
+	{
+		for (int ix = 5; ix < s.x - 5; ix++)
+		{
 			if (iy == s.y / 2 - 5 || iy == s.y / 2 + 4 || ix == 5 || ix == s.x - 6)
 				mvaddch(iy, ix, '@');
 			else
@@ -17,31 +19,39 @@ void ADialogBox::renderWindow() const
 	refresh();
 }
 
-void ADialogBox::closeWindow() {
-	if (Window::getActiveWindow()->dialogBox == this) {
+void ADialogBox::closeWindow()
+{
+	if (Window::getActiveWindow()->dialogBox == this)
+	{
 		Window::getActiveWindow()->dialogBox = nullptr;
 		delete this;
 	}
 }
 
-void InputDialogBox::handleKeys(char key) {
-	if (inputText.length() < limitCharacters && ((key >= '0' && key <= '9') || (key >= 'a' && key <= 'z') || key == '_' || key == '.' || key == '-')) {
+void InputDialogBox::handleKeys(char key)
+{
+	if (inputText.length() < limitCharacters && ((key >= '0' && key <= '9') || (key >= 'a' && key <= 'z') || key == '_' || key == '.' || key == '-'))
+	{
 		inputText += key;
 	}
-	else if (key == 8) {
+	else if (key == 8)
+	{
 		inputText.clearLastChar();
 	}
-	else if (key == 13) {
+	else if (key == 13)
+	{
 		successCallback();
 		closeWindow();
 	}
-	else if (key == 27) {
+	else if (key == 27)
+	{
 		failureCallback();
 		closeWindow();
 	}
 }
 
-void InputDialogBox::render() {
+void InputDialogBox::render()
+{
 	renderWindow();
 
 	mvprintw(window->windowSize.y / 2 - 3, window->windowSize.x / 2 - 15, answer);
@@ -50,22 +60,24 @@ void InputDialogBox::render() {
 	mvprintw(window->windowSize.y / 2 + 3, window->windowSize.x - 10, "[Esc] Odrzuc");
 }
 
-void InfoDialogBox::render() {
+void InfoDialogBox::render()
+{
 	renderWindow();
 
 
 	mvprintw(window->windowSize.y / 2 - 2, window->windowSize.x / 2 - 15, answer);
-	if(!yesText.isEmpty())
+	if (!yesText.isEmpty())
 		mvprintw(window->windowSize.y / 2 + 3, 7, "[%c] %s", yesKey, yesText);
-	
-	if(!noText.isEmpty())
+
+	if (!noText.isEmpty())
 		mvprintw(window->windowSize.y / 2 + 3, window->windowSize.x - 16, "[%c] %s", noKey, noText);
 
-	if(!thirdText.isEmpty())
+	if (!thirdText.isEmpty())
 		mvprintw(window->windowSize.y / 2 + 2, window->windowSize.x / 2 - 5, "[%c] %s", thirdKey, thirdText);
 }
 
-void InfoDialogBox::handleKeys(char key) {
+void InfoDialogBox::handleKeys(char key)
+{
 	if (!yesText.isEmpty() && key == yesKey)
 		successCallback();
 	else if (!noText.isEmpty() && key == noKey)
@@ -73,3 +85,4 @@ void InfoDialogBox::handleKeys(char key) {
 	else if (!thirdText.isEmpty() && key == thirdKey)
 		thirdCallback();
 }
+

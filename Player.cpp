@@ -3,11 +3,14 @@
 using namespace Game;
 using namespace Utils;
 
-void Player::action() {}
+void Player::action()
+{
+}
 
 void Player::handleInput(int input)
 {
-	switch(input) {
+	switch (input)
+	{
 	case KEY_UP:
 		move(NORTH);
 		break;
@@ -30,17 +33,22 @@ void Player::onDie()
 
 bool Player::move(Utils::Direction dir)
 {
-	if(position + dir < V2(0, 0) || position + dir >= MAP_SIZE) {
+	if (position + dir < V2(0, 0) || position + dir >= MAP_SIZE)
+	{
 		return false;
 	}
-	try {
+	try
+	{
 		Organism* collider = world->getOrganismOnPos(position + dir);
 		if (collider != nullptr)
 			collision(collider, true);
 
 		world->moveOrganism(this, dir);
 		world->window->centerPosition = position;
-	} catch(Engine::InterruptActionException e) {}
+	}
+	catch (Engine::InterruptActionException e)
+	{
+	}
 	return true;
 }
 

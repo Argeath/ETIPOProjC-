@@ -3,9 +3,10 @@
 #define V2D(a, b) Utils::Vector2<double>(a, b)
 #define V2(a, b) Utils::Vector2<int>(a, b)
 
-namespace Utils {
-
-	enum Direction {
+namespace Utils
+{
+	enum Direction
+	{
 		NORTH,
 		EAST,
 		SOUTH,
@@ -17,18 +18,25 @@ namespace Utils {
 		NONE
 	};
 
-	template<typename T>
-	class Vector2 {
+	template <typename T>
+	class Vector2
+	{
 	public:
 		T x;
 		T y;
 
-		Vector2() : x(0), y(0) {}
+		Vector2() : x(0), y(0)
+		{
+		}
 
-		Vector2(T a, T b) : x(a), y(b) {}
+		Vector2(T a, T b) : x(a), y(b)
+		{
+		}
 
-		Vector2(Direction dir) : x(0), y(0) {
-			switch (dir) {
+		Vector2(Direction dir) : x(0), y(0)
+		{
+			switch (dir)
+			{
 			case NORTHEAST:
 				x = 1;
 				y = -1;
@@ -56,7 +64,8 @@ namespace Utils {
 			}
 		}
 
-		Vector2 reversed() {
+		Vector2 reversed()
+		{
 			return V2D(y, x);
 		}
 
@@ -67,7 +76,8 @@ namespace Utils {
 			return *this;
 		}
 
-		friend Vector2 operator+(Vector2 lhs, const Vector2 &v) {
+		friend Vector2 operator+(Vector2 lhs, const Vector2& v)
+		{
 			Vector2 n = lhs;
 			n += v;
 			return n;
@@ -80,7 +90,8 @@ namespace Utils {
 			return *this;
 		}
 
-		friend Vector2 operator-(Vector2 lhs, const Vector2 &v) {
+		friend Vector2 operator-(Vector2 lhs, const Vector2& v)
+		{
 			Vector2 n = lhs;
 			n -= v;
 			return n;
@@ -93,7 +104,8 @@ namespace Utils {
 			return *this;
 		}
 
-		friend Vector2 operator*(Vector2 lhs, const Vector2 &v) {
+		friend Vector2 operator*(Vector2 lhs, const Vector2& v)
+		{
 			Vector2 n = lhs;
 			n *= v;
 			return n;
@@ -106,7 +118,8 @@ namespace Utils {
 			return *this;
 		}
 
-		friend Vector2 operator/(Vector2 lhs, const Vector2 &v) {
+		friend Vector2 operator/(Vector2 lhs, const Vector2& v)
+		{
 			Vector2 n = lhs;
 			n /= v;
 			return n;;
@@ -119,7 +132,8 @@ namespace Utils {
 			return *this;
 		}
 
-		friend Vector2 operator*(Vector2 lhs, const T &c) {
+		friend Vector2 operator*(Vector2 lhs, const T& c)
+		{
 			Vector2 n = lhs;
 			n *= c;
 			return n;
@@ -133,36 +147,42 @@ namespace Utils {
 			return *this;
 		}
 
-		friend Vector2 operator/(Vector2 lhs, const T &c) {
+		friend Vector2 operator/(Vector2 lhs, const T& c)
+		{
 			Vector2 n = lhs;
 			n /= c;
 			return n;
 		}
 
-		friend bool operator==(const Vector2 &v1, const Vector2 &v2) {
+		friend bool operator==(const Vector2& v1, const Vector2& v2)
+		{
 			return (v1.x == v2.x && v1.y == v2.y);
 		}
 
-		friend bool operator!=(const Vector2 &v1, const Vector2 &v2) {
+		friend bool operator!=(const Vector2& v1, const Vector2& v2)
+		{
 			return (v1.x != v2.x || v1.y != v2.y);
 		}
 
-		friend bool operator>(const Vector2 &v1, const Vector2 &v2) {
+		friend bool operator>(const Vector2& v1, const Vector2& v2)
+		{
 			return (v1.x > v2.x || v1.y > v2.y);
 		}
 
-		friend bool operator<(const Vector2 &v1, const Vector2 &v2) {
+		friend bool operator<(const Vector2& v1, const Vector2& v2)
+		{
 			return (v1.x < v2.x || v1.y < v2.y);
 		}
 
-		friend bool operator>=(const Vector2 &v1, const Vector2 &v2) {
+		friend bool operator>=(const Vector2& v1, const Vector2& v2)
+		{
 			return (v1.x >= v2.x || v1.y >= v2.y);
 		}
 
-		friend bool operator<=(const Vector2 &v1, const Vector2 &v2) {
+		friend bool operator<=(const Vector2& v1, const Vector2& v2)
+		{
 			return (v1.x <= v2.x || v1.y <= v2.y);
 		}
-
 	};
-
 }
+

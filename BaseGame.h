@@ -9,11 +9,16 @@ namespace Engine
 	public:
 		Window* window;
 
-		virtual ~BaseGame() {}
+		virtual ~BaseGame()
+		{
+		}
 
-		BaseGame(Window* win) : window(win) {}
+		BaseGame(Window* win) : window(win)
+		{
+		}
 
 		virtual void update(int input) = 0;
 		virtual void render() = 0;
 	};
 }
+

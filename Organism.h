@@ -1,6 +1,7 @@
 #pragma once
 
-namespace Game {
+namespace Game
+{
 	class World;
 
 	enum OrganismType
@@ -30,9 +31,12 @@ namespace Game {
 		}
 	};
 
-	class Organism {
+	class Organism
+	{
 	public:
-		virtual ~Organism() {}
+		virtual ~Organism()
+		{
+		}
 
 		Organism(World* w) : age(0), strength(0), initiative(0), isDieing(false), world(w)
 		{
@@ -59,6 +63,6 @@ namespace Game {
 		virtual void onDie() = 0;
 	protected:
 		World* world;
-
 	};
 }
+

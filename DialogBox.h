@@ -1,12 +1,16 @@
 #pragma once
 
-namespace Engine {
+namespace Engine
+{
 	class Window;
-	typedef void(*CallbackFunction)();
+	typedef void (*CallbackFunction)();
 
-	class ADialogBox {
+	class ADialogBox
+	{
 	public:
-		virtual ~ADialogBox() {}
+		virtual ~ADialogBox()
+		{
+		}
 
 		Window* window;
 		Utils::Text answer;
@@ -14,7 +18,9 @@ namespace Engine {
 		CallbackFunction successCallback;
 		CallbackFunction failureCallback;
 
-		ADialogBox(Window* w) : window(w), size(V2(600, 60)), successCallback(nullptr), failureCallback(nullptr) {}
+		ADialogBox(Window* w) : window(w), size(V2(600, 60)), successCallback(nullptr), failureCallback(nullptr)
+		{
+		}
 
 		virtual void handleKeys(char key) = 0;
 		virtual void render() = 0;
@@ -22,31 +28,41 @@ namespace Engine {
 		void closeWindow();
 	};
 
-	class InputDialogBox : public ADialogBox {
+	class InputDialogBox : public ADialogBox
+	{
 	public:
 		Utils::Text inputText;
 		int limitCharacters;
 
-		InputDialogBox(Window* w) : ADialogBox(w), limitCharacters(15) {}
+		InputDialogBox(Window* w) : ADialogBox(w), limitCharacters(15)
+		{
+		}
 
 		void handleKeys(char key) override;
 		void render() override;
 	};
 
-	class InfoDialogBox : public ADialogBox {
+	class InfoDialogBox : public ADialogBox
+	{
 	public:
 		char yesKey, noKey, thirdKey;
 		Utils::Text yesText, noText, thirdText;
 
 		CallbackFunction thirdCallback;
 
-		InfoDialogBox(Window* w) : ADialogBox(w) {}
+		InfoDialogBox(Window* w) : ADialogBox(w)
+		{
+		}
 
 		void handleKeys(char key) override;
 		void render() override;
 	};
 
-	enum DialogBoxType {
-		FinishGame, Info, StartGame
+	enum DialogBoxType
+	{
+		FinishGame,
+		Info,
+		StartGame
 	};
 }
+

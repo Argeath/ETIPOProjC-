@@ -9,8 +9,10 @@ void World::update(int input)
 	round++;
 	sort(organisms.begin(), organisms.end(), compareOrganismsByInitiative);
 
-	for (vector<Organism*>::const_iterator it = organisms.begin(); it != organisms.end(); ++it) {
-		if ( ! (*it)->isDieing) {
+	for (vector<Organism*>::const_iterator it = organisms.begin(); it != organisms.end(); ++it)
+	{
+		if (! (*it)->isDieing)
+		{
 			(*it)->age++;
 			if (((Animal*)*it) != nullptr)
 				((Animal*)*it)->timeSinceLastBreed++;
@@ -20,8 +22,10 @@ void World::update(int input)
 		}
 	}
 
-	for (vector<Organism*>::const_iterator it = organisms.begin(); it != organisms.end();) {
-		if ((*it)->isDieing) {
+	for (vector<Organism*>::const_iterator it = organisms.begin(); it != organisms.end();)
+	{
+		if ((*it)->isDieing)
+		{
 			if (organismMap[(*it)->position.y][(*it)->position.x] == *it)
 				organismMap[(*it)->position.y][(*it)->position.x] = nullptr;
 			delete *it;
@@ -30,7 +34,8 @@ void World::update(int input)
 		else ++it;
 	}
 
-	for (vector<Organism*>::const_iterator it = toBorn.begin(); it != toBorn.end(); ++it) {
+	for (vector<Organism*>::const_iterator it = toBorn.begin(); it != toBorn.end(); ++it)
+	{
 		organisms.push_back(*it);
 	}
 	toBorn.clear();
@@ -47,7 +52,7 @@ void World::render()
 	Vector2<int> startDraw = V2(0, 0);
 	Vector2<int> stopDraw = mapSize;
 
-	if(windowGameSize < mapSize)
+	if (windowGameSize < mapSize)
 	{
 		Vector2<int> half = windowGameSize / 2;
 		startDraw = window->centerPosition - half;
@@ -61,13 +66,17 @@ void World::render()
 		stopDraw = startDraw + windowGameSize;
 	}
 
-	for (int iy = startDraw.y, yy = 0; iy < stopDraw.y; iy++, yy++) {
+	for (int iy = startDraw.y, yy = 0; iy < stopDraw.y; iy++ , yy++)
+	{
 		move(yy + window->mapStart.y, window->mapStart.x);
-		for (int ix = startDraw.x, xx = 0; ix < stopDraw.x; ix++, xx+=2) {
-			if(organismMap[iy][ix] != nullptr) {
+		for (int ix = startDraw.x, xx = 0; ix < stopDraw.x; ix++ , xx += 2)
+		{
+			if (organismMap[iy][ix] != nullptr)
+			{
 				addch(organismMap[iy][ix]->appearance.sign | organismMap[iy][ix]->appearance.colors);
 				addch(organismMap[iy][ix]->appearance.sign | organismMap[iy][ix]->appearance.colors);
-			} else
+			}
+			else
 			{
 				addch(' ' | COLOR_PAIR(1));
 				addch(' ' | COLOR_PAIR(1));
@@ -81,7 +90,7 @@ void World::createRandomOrganisms()
 	int rozmiar = sqrt(MAP_HEIGHT * MAP_WIDTH) / 5;
 	for (int type = WOLF; type <= SOW_THISTLE; type++)
 	{
-		int amount = (rand() % rozmiar) + rozmiar/2;
+		int amount = (rand() % rozmiar) + rozmiar / 2;
 		for (int i = 0; i < amount; i++)
 			createOrganism((OrganismType)type);
 	}
@@ -111,14 +120,17 @@ void World::createPlayer()
 	window->centerPosition = player->position;
 }
 
-void World::addOrganism(Organism* organism) {
-	if (getOrganismOnPos(organism->position) == nullptr) {
+void World::addOrganism(Organism* organism)
+{
+	if (getOrganismOnPos(organism->position) == nullptr)
+	{
 		toBorn.push_back(organism);
 		organismMap[organism->position.y][organism->position.x] = organism;
 	}
 }
 
-Organism* World::getOrganismOnPos(Utils::Vector2<int> pos) {
+Organism* World::getOrganismOnPos(Utils::Vector2<int> pos)
+{
 	return organismMap[pos.y][pos.x];
 	/*for (std::list<Organism*>::iterator it = organisms.begin(); it != organisms.end(); ++it)
 		if ((*it)->position == pos)
@@ -126,17 +138,17 @@ Organism* World::getOrganismOnPos(Utils::Vector2<int> pos) {
 	return nullptr;*/
 }
 
-void World::moveOrganism(Organism* organism, Utils::Direction dir) {
+void World::moveOrganism(Organism* organism, Utils::Direction dir)
+{
 	organismMap[organism->position.y][organism->position.x] = nullptr;
 
 	organism->position += dir;
 	organismMap[organism->position.y][organism->position.x] = organism;
 }
 
-bool World::compareOrganismsByInitiative(const Organism* a, const Organism* b) {
+bool World::compareOrganismsByInitiative(const Organism* a, const Organism* b)
+{
 	if (a->initiative == b->initiative) return (a->age > b->age);
 	return (a->initiative > b->initiative);
 }
-
-
 

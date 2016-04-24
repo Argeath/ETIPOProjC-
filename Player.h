@@ -19,6 +19,10 @@ namespace Game
 		void handleInput(int input);
 		void onDie() override;
 
-		OrganismType getType() override { return HUMAN; }
+		OrganismType getType() override
+		{
+			return HUMAN;
+		}
 	};
 }
+

@@ -5,26 +5,28 @@ using namespace Engine;
 
 Window* Window::activeWindow = nullptr;
 
-Window::Window() : dialogBox(nullptr) {
+Window::Window() : dialogBox(nullptr)
+{
 	quit = worldTime = 0;
 
 	logs = new Logs(this);
 	game = new Game::World(this);
 }
 
-Window::~Window() {
-
+Window::~Window()
+{
 	if (dialogBox != nullptr)
 		delete dialogBox;
 
-	if(activeWindow == this)
+	if (activeWindow == this)
 		activeWindow = nullptr;
 
 	if (game != nullptr)
 		delete game;
 }
 
-int Window::init() {
+int Window::init()
+{
 	initscr();
 	resize_term(((MAP_HEIGHT < MAX_HEIGHT) ? MAP_HEIGHT : MAX_HEIGHT) + 2 + LOG_LINES, ((MAP_WIDTH < MAX_WIDTH) ? MAP_WIDTH : MAX_WIDTH) * 2 + 4);
 	keypad(stdscr, true);
@@ -32,7 +34,7 @@ int Window::init() {
 
 	hasColors = has_colors();
 
-	if(hasColors)
+	if (hasColors)
 	{
 		start_color();
 		init_pair(1, COLOR_WHITE, COLOR_BLACK);
@@ -61,16 +63,19 @@ int Window::init() {
 	return 0;
 }
 
-void Window::loop() {
+void Window::loop()
+{
 	int input;
 	game->render();
 
 	showWindow(StartGame);
 	refresh();
 
-	while (!quit) {
+	while (!quit)
+	{
 		input = getch();
-		if (dialogBox != nullptr) {
+		if (dialogBox != nullptr)
+		{
 			dialogBox->render();
 			dialogBox->handleKeys(input);
 		}
@@ -86,10 +91,13 @@ void Window::loop() {
 	endwin();
 }
 
-void Window::renderWindow() {
-	for (int iy = 0; iy < windowSize.y; iy++) {
+void Window::renderWindow()
+{
+	for (int iy = 0; iy < windowSize.y; iy++)
+	{
 		move(iy, 0);
-		for (int ix = 0; ix < windowSize.x; ix++) {
+		for (int ix = 0; ix < windowSize.x; ix++)
+		{
 			if (iy >= 1 && iy < windowSize.y - 1 && ix > 1 && ix < windowSize.x - 2) continue;
 			if (iy >= 1 && iy < windowSize.y - 1 && ix > windowSize.x - 3) move(iy, ix);
 			addch('#');
@@ -97,7 +105,8 @@ void Window::renderWindow() {
 	}
 }
 
-void finishGameSuccess() {
+void finishGameSuccess()
+{
 	delete Window::getActiveWindow()->game;
 	Window::getActiveWindow()->game = new Game::World(Window::getActiveWindow());
 
@@ -105,60 +114,66 @@ void finishGameSuccess() {
 	Window::getActiveWindow()->dialogBox = nullptr;
 }
 
-void finishGameFailure() {
+void finishGameFailure()
+{
 	delete Window::getActiveWindow()->dialogBox;
 	Window::getActiveWindow()->dialogBox = nullptr;
 
 	Window::getActiveWindow()->quitWindow();
 }
 
-void finishGameLoadSave() {
+void finishGameLoadSave()
+{
 	//Window::getInstance()->game->loadGame();
 
 	delete Window::getActiveWindow()->dialogBox;
 	Window::getActiveWindow()->dialogBox = nullptr;
 }
 
-void Window::showWindow(DialogBoxType type) {
-	switch (type) {
-	case FinishGame: {
-		InfoDialogBox* box = new InfoDialogBox(this);
-		box->answer = "Czy chcesz zagrac ponownie?";
-		box->size.x = 300;
+void Window::showWindow(DialogBoxType type)
+{
+	switch (type)
+	{
+	case FinishGame:
+		{
+			InfoDialogBox* box = new InfoDialogBox(this);
+			box->answer = "Czy chcesz zagrac ponownie?";
+			box->size.x = 300;
 
-		box->yesKey = 't';
-		box->yesText = "Tak";
-		box->noKey = 'n';
-		box->noText = "Nie";
-		box->thirdKey = 'l';
-		box->thirdText = "Wczytaj";
+			box->yesKey = 't';
+			box->yesText = "Tak";
+			box->noKey = 'n';
+			box->noText = "Nie";
+			box->thirdKey = 'l';
+			box->thirdText = "Wczytaj";
 
-		box->successCallback = &finishGameSuccess;
-		box->failureCallback = &finishGameFailure;
-		box->thirdCallback = &finishGameLoadSave;
+			box->successCallback = &finishGameSuccess;
+			box->failureCallback = &finishGameFailure;
+			box->thirdCallback = &finishGameLoadSave;
 
-		dialogBox = box;
-		break;
+			dialogBox = box;
+			break;
+		}
+	case StartGame:
+		{
+			InfoDialogBox* box = new InfoDialogBox(this);
+			box->answer = "Witaj w SimulETIrze swiata!";
+			box->yesKey = 't';
+			box->yesText = "Nowa gra";
+			box->noKey = 'q';
+			box->noText = "Wyjdz";
+			box->thirdKey = 'l';
+			box->thirdText = "Wczytaj";
+
+			box->failureCallback = &finishGameFailure;
+			box->successCallback = &finishGameSuccess;
+			box->thirdCallback = &finishGameLoadSave; // TODO: Wczytaj gre
+
+			dialogBox = box;
+			break;
+		}
 	}
-	case StartGame: {
-		InfoDialogBox* box = new InfoDialogBox(this);
-		box->answer = "Witaj w SimulETIrze swiata!";
-		box->yesKey = 't';
-		box->yesText = "Nowa gra";
-		box->noKey = 'q';
-		box->noText = "Wyjdz";
-		box->thirdKey = 'l';
-		box->thirdText = "Wczytaj";
-		
-		box->failureCallback = &finishGameFailure;
-		box->successCallback = &finishGameSuccess;
-		box->thirdCallback = &finishGameLoadSave; // TODO: Wczytaj gre
-
-		dialogBox = box;
-		break;
-	}
-	}
-	if(dialogBox != nullptr)
+	if (dialogBox != nullptr)
 		dialogBox->render();
 	refresh();
 }
@@ -173,6 +188,8 @@ void Window::printLogs()
 		mvprintw(windowSize.y + i, 0, "%d: %s", logs->items.size(), logs->items[i]);
 }
 
-void Window::quitWindow() {
+void Window::quitWindow()
+{
 	quit = true;
 }
+

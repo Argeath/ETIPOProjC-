@@ -2,9 +2,10 @@
 
 #define T(a) Utils::Text(a)
 
-namespace Utils {
-
-	class Text {
+namespace Utils
+{
+	class Text
+	{
 	private:
 		char* string;
 
@@ -14,7 +15,7 @@ namespace Utils {
 		Text(char c);
 		Text(const char* str);
 		Text(char* str);
-		Text(const Text &str);
+		Text(const Text& str);
 
 		~Text();
 
@@ -24,36 +25,43 @@ namespace Utils {
 		int length() const;
 		bool isEmpty() const;
 
-		Text& operator=(const Text &obj) {
+		Text& operator=(const Text& obj)
+		{
 			cpy(obj.string);
 			return *this;
 		}
 
-		Text& operator=(char *str) {
+		Text& operator=(char* str)
+		{
 			cpy(str);
 			return *this;
 		}
 
-		Text& operator+(const Text &str) {
+		Text& operator+(const Text& str)
+		{
 			cat(str.string);
 			return *this;
 		}
 
-		Text& operator+=(const Text &str) {
+		Text& operator+=(const Text& str)
+		{
 			cat(str.string);
 			return *this;
 		}
 
-		Text& operator+(char* str) {
+		Text& operator+(char* str)
+		{
 			cat(str);
 			return *this;
 		}
 
-		friend bool operator==(const Text &t1, const Text &t2) {
+		friend bool operator==(const Text& t1, const Text& t2)
+		{
 			return strcmp(t1.string, t2.string) == 0;
 		}
 
-		friend bool operator!=(const Text &t1, const Text &t2) {
+		friend bool operator!=(const Text& t1, const Text& t2)
+		{
 			return strcmp(t1.string, t2.string) != 0;
 		}
 
@@ -74,7 +82,8 @@ namespace Utils {
 
 	private:
 
-		void cpy(char *str);
-		void cat(char *str);
+		void cpy(char* str);
+		void cat(char* str);
 	};
 }
+

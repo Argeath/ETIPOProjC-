@@ -7,8 +7,8 @@ Direction Organism::getRandomDirection(bool mustBeEmpty) const
 {
 	Direction possible_directions[4];
 	int n = 0;
-	
-	if((position.x > 0 && !mustBeEmpty) || (position.x > 0 && world->getOrganismOnPos(position + WEST) == nullptr))
+
+	if ((position.x > 0 && !mustBeEmpty) || (position.x > 0 && world->getOrganismOnPos(position + WEST) == nullptr))
 		possible_directions[n++] = WEST;
 	if ((position.y > 0 && !mustBeEmpty) || (position.y > 0 && world->getOrganismOnPos(position + NORTH) == nullptr))
 		possible_directions[n++] = NORTH;
@@ -33,9 +33,10 @@ void Organism::breed(Organism* otherParent)
 	world->addOrganism(organism);
 
 	Animal* thisAnimal = (Animal*)this;
-	if(thisAnimal != nullptr)
+	if (thisAnimal != nullptr)
 		thisAnimal->timeSinceLastBreed = 0;
-	if (otherParent != nullptr) {
+	if (otherParent != nullptr)
+	{
 		Animal* otherAnimal = (Animal*)otherParent;
 		otherAnimal->timeSinceLastBreed = 0;
 	}
@@ -77,7 +78,7 @@ Organism* Organism::getOrganismByType(OrganismType type, World* world)
 		organism = new Wolfberry(world);
 		break;
 	case NONE:
-	default: 
+	default:
 		break;
 	}
 
@@ -113,3 +114,4 @@ Utils::Text Organism::getOrganismNameByType(OrganismType type)
 		return "Unknown";
 	}
 }
+

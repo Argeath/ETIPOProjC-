@@ -1,6 +1,7 @@
 #pragma once
 
-namespace Game {
+namespace Game
+{
 	class World : public Engine::BaseGame
 	{
 		std::vector<Organism*> organisms;
@@ -19,11 +20,11 @@ namespace Game {
 		World(Engine::Window* window) : BaseGame(window), round(0), isPlayerMove(false)
 		{
 			organismMap = new Organism**[MAP_HEIGHT];
-			for (int i = 0; i < MAP_HEIGHT; i++) {
+			for (int i = 0; i < MAP_HEIGHT; i++)
+			{
 				organismMap[i] = new Organism*[MAP_WIDTH];
 				for (int ix = 0; ix < MAP_WIDTH; ix++)
 					organismMap[i][ix] = nullptr;
-
 			}
 
 			createPlayer();
@@ -40,3 +41,4 @@ namespace Game {
 		void update(int input) override;
 	};
 }
+

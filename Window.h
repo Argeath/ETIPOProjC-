@@ -1,7 +1,9 @@
 #pragma once
 
-namespace Engine {
-	class Window {
+namespace Engine
+{
+	class Window
+	{
 		static Window* activeWindow;
 
 		char windowTab[20][20];
@@ -9,7 +11,7 @@ namespace Engine {
 	public:
 		int quit;
 		double worldTime;
-		ADialogBox *dialogBox;
+		ADialogBox* dialogBox;
 		BaseGame* game;
 		Logs* logs;
 		bool hasColors;
@@ -29,12 +31,15 @@ namespace Engine {
 		void showWindow(DialogBoxType type);
 		void printLogs();
 
-		static Window* getActiveWindow() {
+		static Window* getActiveWindow()
+		{
 			return activeWindow;
 		}
 
-		void setActive() {
+		void setActive()
+		{
 			activeWindow = this;
 		}
 	};
 }
+

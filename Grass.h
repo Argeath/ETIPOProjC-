@@ -5,10 +5,15 @@ namespace Game
 	class Grass : public Plant
 	{
 	public:
-		Grass(World* w) : Plant(w) {
+		Grass(World* w) : Plant(w)
+		{
 			appearance.colors = COLOR_PAIR(2);
 		}
 
-		OrganismType getType() override { return GRASS; }
+		OrganismType getType() override
+		{
+			return GRASS;
+		}
 	};
 }
+

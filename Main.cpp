@@ -2,9 +2,9 @@
 
 using namespace Engine;
 
-int main(int argc, char *argv[]) {
-
-	if(MAP_HEIGHT < 20 || MAP_WIDTH < 20)
+int main(int argc, char* argv[])
+{
+	if (MAP_HEIGHT < 20 || MAP_WIDTH < 20)
 	{
 		printf("Map too small...");
 		return 0;
@@ -24,3 +24,4 @@ int main(int argc, char *argv[]) {
 	delete window;
 	return 0;
 };
+
