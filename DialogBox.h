@@ -7,35 +7,80 @@ namespace Engine
 
 	class ADialogBox
 	{
+	protected:
+		Window* window;
+		Utils::Text answer;
+		CallbackFunction successCallback;
+		CallbackFunction failureCallback;
 	public:
 		virtual ~ADialogBox()
 		{
 		}
 
-		Window* window;
-		Utils::Text answer;
-		Utils::Vector2<int> size;
-		CallbackFunction successCallback;
-		CallbackFunction failureCallback;
 
-		ADialogBox(Window* w) : window(w), size(V2(600, 60)), successCallback(nullptr), failureCallback(nullptr)
+		ADialogBox(Window* w) : window(w), successCallback(nullptr), failureCallback(nullptr)
 		{
+		}
+
+		void setAnswer(Utils::Text str)
+		{
+			answer = str;
+		}
+
+		void setSuccessCallback(CallbackFunction func)
+		{
+			successCallback = func;
+		}
+
+		void setFailureCallback(CallbackFunction func)
+		{
+			failureCallback = func;
 		}
 
 		virtual void handleKeys(char key) = 0;
 		virtual void render() = 0;
+
 		void renderWindow() const;
 		void closeWindow();
 	};
 
 	class InputDialogBox : public ADialogBox
 	{
-	public:
-		Utils::Text inputText;
+	protected:
 		int limitCharacters;
+		Utils::Text inputText;
+	public:
 
 		InputDialogBox(Window* w) : ADialogBox(w), limitCharacters(15)
 		{
+		}
+
+		void setLimitCharacters(int value)
+		{
+			limitCharacters = value;
+		}
+
+		Utils::Text getResultText() const
+		{
+			return inputText;
+		}
+
+		void handleKeys(char key) override;
+		void render() override;
+	};
+
+	class InputNumbersDialogBox : public InputDialogBox
+	{
+		int number;
+	public:
+
+		InputNumbersDialogBox(Window* w) : InputDialogBox(w), number(0)
+		{
+		}
+
+		int getResult() const
+		{
+			return number;
 		}
 
 		void handleKeys(char key) override;
@@ -44,14 +89,49 @@ namespace Engine
 
 	class InfoDialogBox : public ADialogBox
 	{
-	public:
+	protected:
 		char yesKey, noKey, thirdKey;
 		Utils::Text yesText, noText, thirdText;
 
 		CallbackFunction thirdCallback;
-
-		InfoDialogBox(Window* w) : ADialogBox(w)
+	public:
+		InfoDialogBox(Window* w) : ADialogBox(w), yesKey(0), noKey(0), thirdKey(0), thirdCallback(nullptr)
 		{
+		}
+
+		void setYesKey(char k)
+		{
+			yesKey = k;
+		}
+
+		void setNoKey(char k)
+		{
+			noKey = k;
+		}
+
+		void setYesText(Utils::Text str)
+		{
+			yesText = str;
+		}
+
+		void setNoText(Utils::Text str)
+		{
+			noText = str;
+		}
+
+		void setThirdKey(char k)
+		{
+			thirdKey = k;
+		}
+
+		void setThirdText(Utils::Text str)
+		{
+			thirdText = str;
+		}
+
+		void setThirdCallback(CallbackFunction func)
+		{
+			thirdCallback = func;
 		}
 
 		void handleKeys(char key) override;
@@ -61,8 +141,11 @@ namespace Engine
 	enum DialogBoxType
 	{
 		FinishGame,
-		Info,
-		StartGame
+		StartGame,
+		InputFilenameSave,
+		InputFilenameLoad,
+		InputMapSizeX,
+		InputMapSizeY
 	};
 }
 

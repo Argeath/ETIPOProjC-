@@ -33,6 +33,10 @@ namespace Utils
 		{
 		}
 
+		Vector2(const Vector2& v) : x(v.x), y(v.y)
+		{
+		}
+
 		Vector2(Direction dir) : x(0), y(0)
 		{
 			switch (dir)

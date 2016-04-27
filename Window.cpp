@@ -7,10 +7,11 @@ Window* Window::activeWindow = nullptr;
 
 Window::Window() : dialogBox(nullptr)
 {
-	quit = worldTime = 0;
+	quit = 0;
 
 	logs = new Logs(this);
 	game = new Game::World(this);
+	game->init();
 }
 
 Window::~Window()
@@ -25,10 +26,25 @@ Window::~Window()
 		delete game;
 }
 
+void Window::resize(Vector2<int> size)
+{
+	resize_term(((size.y < MAX_HEIGHT) ? size.y : MAX_HEIGHT) + 2 + LOG_LINES, ((size.x < MAX_WIDTH) ? size.x : MAX_WIDTH) * 2 + 4);
+
+	int row, col;
+	getmaxyx(stdscr, row, col);
+
+	centerPosition = game->getSize() / 2;
+	windowSize = V2(col, row - LOG_LINES);
+	mapStart = V2(2, 1);
+	mapEnd = windowSize - V2(2, 1);
+
+	renderWindow();
+}
+
 int Window::init()
 {
 	initscr();
-	resize_term(((MAP_HEIGHT < MAX_HEIGHT) ? MAP_HEIGHT : MAX_HEIGHT) + 2 + LOG_LINES, ((MAP_WIDTH < MAX_WIDTH) ? MAP_WIDTH : MAX_WIDTH) * 2 + 4);
+	resize(game->getSize());
 	keypad(stdscr, true);
 	noecho();
 
@@ -48,14 +64,6 @@ int Window::init()
 		init_pair(9, COLOR_CYAN, COLOR_YELLOW);
 		init_pair(10, COLOR_WHITE, COLOR_MAGENTA);
 	}
-
-	int row, col;
-	getmaxyx(stdscr, row, col);
-
-	centerPosition = V2(MAP_WIDTH / 2, MAP_HEIGHT / 2);
-	windowSize = V2(col, row - LOG_LINES);
-	mapStart = V2(2, 1);
-	mapEnd = windowSize - V2(2, 1);
 
 	renderWindow();
 	refresh();
@@ -81,9 +89,16 @@ void Window::loop()
 		}
 		else
 		{
-			if (input == 'q')
+			/*if (input == 'q')
 				quitWindow();
-			else
+			else*/
+			if (input == 's')
+				showWindow(InputFilenameSave);
+			else if (input == 27)
+				showWindow(StartGame);
+			else if (input == ' ')
+				((Game::World*)game)->player->castSpell();
+			else if (input == KEY_UP || input == KEY_DOWN || input == KEY_LEFT || input == KEY_RIGHT)
 				game->update(input);
 		}
 		refresh();
@@ -91,7 +106,7 @@ void Window::loop()
 	endwin();
 }
 
-void Window::renderWindow()
+void Window::renderWindow() const
 {
 	for (int iy = 0; iy < windowSize.y; iy++)
 	{
@@ -103,53 +118,102 @@ void Window::renderWindow()
 			addch('#');
 		}
 	}
+	for (int iy = windowSize.y; iy < windowSize.y + LOG_LINES; iy++)
+	{
+		move(iy, 0);
+		for (int ix = 0; ix < windowSize.x; ix++)
+			addch(' ');
+	}
+}
+
+void closeDialogBox()
+{
+	Window::getActiveWindow()->killDialogBox();
+	Window::getActiveWindow()->getGame()->render();
 }
 
 void finishGameSuccess()
 {
-	delete Window::getActiveWindow()->game;
-	Window::getActiveWindow()->game = new Game::World(Window::getActiveWindow());
-
-	delete Window::getActiveWindow()->dialogBox;
-	Window::getActiveWindow()->dialogBox = nullptr;
+	closeDialogBox();
+	Window::getActiveWindow()->showWindow(InputMapSizeX);
 }
 
 void finishGameFailure()
 {
-	delete Window::getActiveWindow()->dialogBox;
-	Window::getActiveWindow()->dialogBox = nullptr;
+	closeDialogBox();
 
 	Window::getActiveWindow()->quitWindow();
 }
 
 void finishGameLoadSave()
 {
-	//Window::getInstance()->game->loadGame();
+	closeDialogBox();
+	Window::getActiveWindow()->showWindow(InputFilenameLoad);
+}
 
-	delete Window::getActiveWindow()->dialogBox;
-	Window::getActiveWindow()->dialogBox = nullptr;
+void inputFilenameLoadSuccess()
+{
+	Text filename = ((InputDialogBox*)Window::getActiveWindow()->getDialogBox())->getResultText();
+
+	Window::getActiveWindow()->loadGame(filename);
+	closeDialogBox();
+}
+
+void inputFilenameSaveSuccess()
+{
+	Text filename = ((InputDialogBox*)Window::getActiveWindow()->getDialogBox())->getResultText();
+
+	Window::getActiveWindow()->saveGame(filename);
+	Window::getActiveWindow()->getLogs()->addLog(T("File ") + filename + " saved.");
+	closeDialogBox();
+}
+
+void inputMapSizeXSuccess()
+{
+	int number = ((InputNumbersDialogBox*)Window::getActiveWindow()->getDialogBox())->getResult();
+
+	Window::getActiveWindow()->newSize.x = number;
+	Window::getActiveWindow()->showWindow(InputMapSizeY);
+}
+
+void inputMapSizeYSuccess()
+{
+	int number = ((InputNumbersDialogBox*)Window::getActiveWindow()->getDialogBox())->getResult();
+
+	Window::getActiveWindow()->newSize.y = number;
+	Window::getActiveWindow()->resize(Window::getActiveWindow()->newSize);
+
+	delete Window::getActiveWindow()->getGame();
+	Window::getActiveWindow()->setGame(new Game::World(Window::getActiveWindow(), Window::getActiveWindow()->newSize));
+	Window::getActiveWindow()->getGame()->init();
+	closeDialogBox();
 }
 
 void Window::showWindow(DialogBoxType type)
 {
+	if (dialogBox != nullptr)
+	{
+		delete dialogBox;
+		dialogBox = nullptr;
+	}
+
 	switch (type)
 	{
 	case FinishGame:
 		{
 			InfoDialogBox* box = new InfoDialogBox(this);
-			box->answer = "Czy chcesz zagrac ponownie?";
-			box->size.x = 300;
+			box->setAnswer("Czy chcesz zagrac ponownie?");
 
-			box->yesKey = 't';
-			box->yesText = "Tak";
-			box->noKey = 'n';
-			box->noText = "Nie";
-			box->thirdKey = 'l';
-			box->thirdText = "Wczytaj";
+			box->setYesKey('t');
+			box->setYesText("Tak");
+			box->setNoKey('n');
+			box->setNoText("Nie");
+			box->setThirdKey('l');
+			box->setThirdText("Wczytaj");
 
-			box->successCallback = &finishGameSuccess;
-			box->failureCallback = &finishGameFailure;
-			box->thirdCallback = &finishGameLoadSave;
+			box->setSuccessCallback(&finishGameSuccess);
+			box->setFailureCallback(&finishGameFailure);
+			box->setThirdCallback(&finishGameLoadSave);
 
 			dialogBox = box;
 			break;
@@ -157,35 +221,113 @@ void Window::showWindow(DialogBoxType type)
 	case StartGame:
 		{
 			InfoDialogBox* box = new InfoDialogBox(this);
-			box->answer = "Witaj w SimulETIrze swiata!";
-			box->yesKey = 't';
-			box->yesText = "Nowa gra";
-			box->noKey = 'q';
-			box->noText = "Wyjdz";
-			box->thirdKey = 'l';
-			box->thirdText = "Wczytaj";
+			box->setAnswer("Witaj w SimulETIrze swiata!");
 
-			box->failureCallback = &finishGameFailure;
-			box->successCallback = &finishGameSuccess;
-			box->thirdCallback = &finishGameLoadSave; // TODO: Wczytaj gre
+			box->setYesKey('t');
+			box->setYesText("Nowa gra");
+			box->setNoKey('q');
+			box->setNoText("Wyjdz");
+			box->setThirdKey('l');
+			box->setThirdText("Wczytaj");
+
+			box->setSuccessCallback(&finishGameSuccess);
+			box->setFailureCallback(&finishGameFailure);
+			box->setThirdCallback(&finishGameLoadSave);
 
 			dialogBox = box;
 			break;
 		}
+	case InputFilenameSave:
+		{
+			InputDialogBox* box = new InputDialogBox(this);
+			box->setAnswer("Podaj nazwe pliku: ");
+
+			box->setSuccessCallback(&inputFilenameSaveSuccess);
+			box->setFailureCallback(&closeDialogBox);
+
+			dialogBox = box;
+			break;
+		}
+	case InputFilenameLoad:
+		{
+			InputDialogBox* box = new InputDialogBox(this);
+			box->setAnswer("Podaj nazwe pliku: ");
+
+			box->setSuccessCallback(inputFilenameLoadSuccess);
+			box->setFailureCallback(closeDialogBox);
+
+			dialogBox = box;
+			break;
+		}
+	case InputMapSizeX:
+		{
+			InputNumbersDialogBox* box = new InputNumbersDialogBox(this);
+			box->setAnswer("Podaj szerokosc mapy(20-60): ");
+
+			box->setSuccessCallback(inputMapSizeXSuccess);
+			box->setFailureCallback(closeDialogBox);
+
+			dialogBox = box;
+			break;
+		}
+	case InputMapSizeY:
+		{
+			InputNumbersDialogBox* box = new InputNumbersDialogBox(this);
+			box->setAnswer("Podaj wysokosc mapy(20-60): ");
+
+			box->setSuccessCallback(inputMapSizeYSuccess);
+			box->setFailureCallback(closeDialogBox);
+
+			dialogBox = box;
+			break;
+		}
+	default: break;
 	}
 	if (dialogBox != nullptr)
 		dialogBox->render();
 	refresh();
 }
 
-void Window::printLogs()
+void Window::printLogs() const
 {
 	for (int i = 0; i < LOG_LINES; i++)
 		for (int ix = 0; ix < windowSize.x; ix++)
 			mvaddch(windowSize.y + i, ix, ' ');
 
-	for (int i = 0; i < logs->items.size(); i++)
-		mvprintw(windowSize.y + i, 0, "%d: %s", logs->items.size(), logs->items[i]);
+	for (int i = 0; i < logs->size(); i++)
+		mvprintw(windowSize.y + i, 0, logs->at(i));
+}
+
+void Window::saveGame(Text filename) const
+{
+	std::ofstream file;
+	file.open(filename + T(".map"), std::ios::out | std::ios::trunc | std::ios::binary);
+
+	game->save(file);
+	file.close();
+}
+
+void Window::loadGame(Utils::Text filename)
+{
+	std::ifstream file;
+	file.open(filename + T(".map"), std::ios::in | std::ios::binary);
+
+	try
+	{
+		if (!file.is_open())
+			throw new LoadingMapException("File not found.");
+
+		Game::World* world = Game::World::load(file, this);
+
+		delete game;
+		game = world;
+	}
+	catch (LoadingMapException* exception)
+	{
+		logs->addLog(T("Loading game failed: ") + exception->what());
+		showWindow(StartGame);
+	}
+	file.close();
 }
 
 void Window::quitWindow()

@@ -16,7 +16,7 @@ namespace Game
 
 		void collision(Organism* target, bool isAttacker = false) override
 		{
-			if (isAttacker && target->strength > strength)
+			if (isAttacker && target->getStrength() > strength)
 			{
 				action();
 				throw Engine::InterruptActionException();

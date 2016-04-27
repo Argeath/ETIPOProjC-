@@ -6,15 +6,27 @@ namespace Engine
 
 	class Logs
 	{
-	public:
 		std::deque<Utils::Text> items;
 		Window* window;
 
+	public:
 		Logs(Window* w) : window(w)
 		{
 		}
 
+		int size() const
+		{
+			return items.size();
+		}
+
+		Utils::Text at(int i) const
+		{
+			return items.at(i);
+		}
+
 		void addLog(Utils::Text item);
+		void save(std::ofstream& _out);
+		void load(std::ifstream& _in);
 	};
 }
 

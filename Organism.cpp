@@ -12,9 +12,9 @@ Direction Organism::getRandomDirection(bool mustBeEmpty) const
 		possible_directions[n++] = WEST;
 	if ((position.y > 0 && !mustBeEmpty) || (position.y > 0 && world->getOrganismOnPos(position + NORTH) == nullptr))
 		possible_directions[n++] = NORTH;
-	if ((position.x + 1 < MAP_WIDTH && !mustBeEmpty) || (position.x + 1 < MAP_WIDTH && world->getOrganismOnPos(position + EAST) == nullptr))
+	if ((position.x + 1 < world->getSize().x && !mustBeEmpty) || (position.x + 1 < world->getSize().x && world->getOrganismOnPos(position + EAST) == nullptr))
 		possible_directions[n++] = EAST;
-	if ((position.y + 1 < MAP_HEIGHT && !mustBeEmpty) || (position.y + 1 < MAP_HEIGHT && world->getOrganismOnPos(position + EAST) == nullptr))
+	if ((position.y + 1 < world->getSize().y && !mustBeEmpty) || (position.y + 1 < world->getSize().y && world->getOrganismOnPos(position + EAST) == nullptr))
 		possible_directions[n++] = SOUTH;
 
 	if (n == 0) return Direction::NONE;
@@ -34,11 +34,11 @@ void Organism::breed(Organism* otherParent)
 
 	Animal* thisAnimal = (Animal*)this;
 	if (thisAnimal != nullptr)
-		thisAnimal->timeSinceLastBreed = 0;
+		thisAnimal->setTimeSinceLastBreed(0);
 	if (otherParent != nullptr)
 	{
 		Animal* otherAnimal = (Animal*)otherParent;
-		otherAnimal->timeSinceLastBreed = 0;
+		otherAnimal->setTimeSinceLastBreed(0);
 	}
 }
 
@@ -85,7 +85,7 @@ Organism* Organism::getOrganismByType(OrganismType type, World* world)
 	return organism;
 }
 
-Utils::Text Organism::getOrganismNameByType(OrganismType type)
+Text Organism::getOrganismNameByType(OrganismType type)
 {
 	switch (type)
 	{
@@ -113,5 +113,41 @@ Utils::Text Organism::getOrganismNameByType(OrganismType type)
 	default:
 		return "Unknown";
 	}
+}
+
+void Organism::save(std::ofstream& _out)
+{
+	//_out << (int)getType();
+	io::write(_out, (int)getType());
+	//_out << age << strength << initiative << position.x << position.y;
+	io::write(_out, age);
+	io::write(_out, strength);
+	io::write(_out, initiative);
+	io::write(_out, position.x);
+	io::write(_out, position.y);
+	io::write(_out, appearance.sign);
+	io::write(_out, appearance.colors);
+	//_out << appearance.sign << appearance.colors;
+}
+
+Organism* Organism::load(std::ifstream& _in, World* world)
+{
+	int type;
+	io::read(_in, type);
+	Organism* organism = getOrganismByType((OrganismType)type, world);
+	if (organism == nullptr) return nullptr;
+
+	//_in >> organism->age >> organism->strength >> organism->initiative >> organism->position.x >> organism->position.y;
+	//_in >> organism->appearance.sign >> organism->appearance.colors;
+
+	io::read(_in, organism->age);
+	io::read(_in, organism->strength);
+	io::read(_in, organism->initiative);
+	io::read(_in, organism->position.x);
+	io::read(_in, organism->position.y);
+	io::read(_in, organism->appearance.sign);
+	io::read(_in, organism->appearance.colors);
+
+	return organism;
 }
 

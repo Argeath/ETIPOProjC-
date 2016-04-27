@@ -4,12 +4,6 @@ using namespace Engine;
 
 int main(int argc, char* argv[])
 {
-	if (MAP_HEIGHT < 20 || MAP_WIDTH < 20)
-	{
-		printf("Map too small...");
-		return 0;
-	}
-
 	srand(time(nullptr));
 
 	Window* window = new Window();

@@ -33,6 +33,14 @@ namespace Game
 
 	class Organism
 	{
+	protected:
+		int age;
+		int strength;
+		int initiative;
+		Utils::Vector2<int> position;
+		OrganismAppearance appearance;
+		bool isDieing;
+
 	public:
 		virtual ~Organism()
 		{
@@ -43,19 +51,64 @@ namespace Game
 			appearance = OrganismAppearance();
 		}
 
-		int age;
-		int strength;
-		int initiative;
-		Utils::Vector2<int> position;
-		OrganismAppearance appearance;
-		bool isDieing;
+		int getStrength() const
+		{
+			return strength;
+		}
 
+		void setStrength(int value)
+		{
+			strength = value;
+		}
+
+		int getAge() const
+		{
+			return age;
+		}
+
+		void increaseAge()
+		{
+			age++;
+		}
+
+		int getInitative() const
+		{
+			return initiative;
+		}
+
+		Utils::Vector2<int> getPos() const
+		{
+			return position;
+		}
+
+		void setPosition(Utils::Vector2<int> p)
+		{
+			position = p;
+		}
+
+		OrganismAppearance getAppearance() const
+		{
+			return appearance;
+		}
+
+		bool getIsDieing() const
+		{
+			return isDieing;
+		}
+
+		void setIsDieing()
+		{
+			isDieing = true;
+		}
 
 		Utils::Direction getRandomDirection(bool mustBeEmpty = false) const;
 		void breed(Organism* otherParent = nullptr);
 
 		static Organism* getOrganismByType(OrganismType type, World* world);
 		static Utils::Text getOrganismNameByType(OrganismType type);
+
+		void save(std::ofstream& _out);
+		static Organism* load(std::ifstream& _in, World* world);
 
 		virtual void action() = 0;
 		virtual void collision(Organism* target, bool isAttacker = false) = 0;

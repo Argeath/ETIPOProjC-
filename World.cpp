@@ -11,11 +11,11 @@ void World::update(int input)
 
 	for (vector<Organism*>::const_iterator it = organisms.begin(); it != organisms.end(); ++it)
 	{
-		if (! (*it)->isDieing)
+		if (! (*it)->getIsDieing())
 		{
-			(*it)->age++;
+			(*it)->increaseAge();
 			if (((Animal*)*it) != nullptr)
-				((Animal*)*it)->timeSinceLastBreed++;
+				((Animal*)*it)->increaseTimeSinceLastBreed();
 			(*it)->action();
 			if ((*it)->getType() == HUMAN)
 				((Player*)(*it))->handleInput(input);
@@ -24,10 +24,10 @@ void World::update(int input)
 
 	for (vector<Organism*>::const_iterator it = organisms.begin(); it != organisms.end();)
 	{
-		if ((*it)->isDieing)
+		if ((*it)->getIsDieing())
 		{
-			if (organismMap[(*it)->position.y][(*it)->position.x] == *it)
-				organismMap[(*it)->position.y][(*it)->position.x] = nullptr;
+			if (organismMap[(*it)->getPos().y][(*it)->getPos().x] == *it)
+				organismMap[(*it)->getPos().y][(*it)->getPos().x] = nullptr;
 			delete *it;
 			it = organisms.erase(it);
 		}
@@ -45,36 +45,35 @@ void World::update(int input)
 
 void World::render()
 {
-	Vector2<int> windowSize = window->mapEnd - window->mapStart;
+	Vector2<int> windowSize = window->getMapEnd() - window->getMapStart();
 	Vector2<int> windowGameSize = V2(windowSize.x / 2, windowSize.y);
-	Vector2<int> mapSize = V2(MAP_WIDTH, MAP_HEIGHT);
 
 	Vector2<int> startDraw = V2(0, 0);
-	Vector2<int> stopDraw = mapSize;
+	Vector2<int> stopDraw = size;
 
-	if (windowGameSize < mapSize)
+	if (windowGameSize < size)
 	{
 		Vector2<int> half = windowGameSize / 2;
-		startDraw = window->centerPosition - half;
+		startDraw = window->getCenterPos() - half;
 		if (startDraw.y < 0) startDraw.y = 0;
 		if (startDraw.x < 0) startDraw.x = 0;
-		if (startDraw.y > mapSize.y - windowGameSize.y)
-			startDraw.y = mapSize.y - windowGameSize.y;
-		if (startDraw.x > mapSize.x - windowGameSize.x)
-			startDraw.x = mapSize.x - windowGameSize.x;
+		if (startDraw.y > size.y - windowGameSize.y)
+			startDraw.y = size.y - windowGameSize.y;
+		if (startDraw.x > size.x - windowGameSize.x)
+			startDraw.x = size.x - windowGameSize.x;
 
 		stopDraw = startDraw + windowGameSize;
 	}
 
 	for (int iy = startDraw.y, yy = 0; iy < stopDraw.y; iy++ , yy++)
 	{
-		move(yy + window->mapStart.y, window->mapStart.x);
+		move(yy + window->getMapStart().y, window->getMapStart().x);
 		for (int ix = startDraw.x, xx = 0; ix < stopDraw.x; ix++ , xx += 2)
 		{
 			if (organismMap[iy][ix] != nullptr)
 			{
-				addch(organismMap[iy][ix]->appearance.sign | organismMap[iy][ix]->appearance.colors);
-				addch(organismMap[iy][ix]->appearance.sign | organismMap[iy][ix]->appearance.colors);
+				addch(organismMap[iy][ix]->getAppearance().sign | organismMap[iy][ix]->getAppearance().colors);
+				addch(organismMap[iy][ix]->getAppearance().sign | organismMap[iy][ix]->getAppearance().colors);
 			}
 			else
 			{
@@ -87,7 +86,7 @@ void World::render()
 
 void World::createRandomOrganisms()
 {
-	int rozmiar = sqrt(MAP_HEIGHT * MAP_WIDTH) / 5;
+	int rozmiar = sqrt(size.y * size.x) / 5;
 	for (int type = WOLF; type <= SOW_THISTLE; type++)
 	{
 		int amount = (rand() % rozmiar) + rozmiar / 2;
@@ -102,14 +101,20 @@ Organism* World::createOrganism(OrganismType type)
 
 	if (organism == nullptr) return nullptr;
 
-	int posX = rand() % MAP_WIDTH;
-	int posY = rand() % MAP_HEIGHT;
-	organism->position = V2(posX, posY);
+	int posX = rand() % size.x;
+	int posY = rand() % size.y;
+	organism->setPosition(V2(posX, posY));
 
 	addOrganism(organism);
 	return organism;
 }
 
+
+void World::init()
+{
+	createPlayer();
+	createRandomOrganisms();
+}
 
 void World::createPlayer()
 {
@@ -117,19 +122,19 @@ void World::createPlayer()
 	if (p == nullptr) return; // TODO: Throw exception
 
 	player = p;
-	window->centerPosition = player->position;
+	window->setCenterPos(player->getPos());
 }
 
 void World::addOrganism(Organism* organism)
 {
-	if (getOrganismOnPos(organism->position) == nullptr)
+	if (getOrganismOnPos(organism->getPos()) == nullptr)
 	{
 		toBorn.push_back(organism);
-		organismMap[organism->position.y][organism->position.x] = organism;
+		organismMap[organism->getPos().y][organism->getPos().x] = organism;
 	}
 }
 
-Organism* World::getOrganismOnPos(Utils::Vector2<int> pos)
+Organism* World::getOrganismOnPos(Utils::Vector2<int> pos) const
 {
 	return organismMap[pos.y][pos.x];
 	/*for (std::list<Organism*>::iterator it = organisms.begin(); it != organisms.end(); ++it)
@@ -138,17 +143,82 @@ Organism* World::getOrganismOnPos(Utils::Vector2<int> pos)
 	return nullptr;*/
 }
 
-void World::moveOrganism(Organism* organism, Utils::Direction dir)
+void World::moveOrganism(Organism* organism, Utils::Direction dir) const
 {
-	organismMap[organism->position.y][organism->position.x] = nullptr;
+	organismMap[organism->getPos().y][organism->getPos().x] = nullptr;
 
-	organism->position += dir;
-	organismMap[organism->position.y][organism->position.x] = organism;
+	organism->setPosition(organism->getPos() + dir);
+	organismMap[organism->getPos().y][organism->getPos().x] = organism;
+}
+
+void World::save(std::ofstream& _out)
+{
+	//_out << MAP_WIDTH << MAP_HEIGHT << round << isPlayerMove;
+	io::write(_out, size.x);
+	io::write(_out, size.y);
+	io::write(_out, round);
+	io::write(_out, isPlayerMove);
+	io::write(_out, player->getToNextSpell());
+
+	//window->logs->save(_out);
+
+	//_out << organisms.size();
+	io::write(_out, organisms.size());
+	for (vector<Organism*>::const_iterator it = organisms.begin(); it != organisms.end(); ++it)
+		(*it)->save(_out);
+}
+
+World* World::load(std::ifstream& _in, Engine::Window* window)
+{
+	int round;
+	Vector2<int> size;
+	bool isPlayerMove;
+	int toNextSpell;
+	//_in >> width >> height >> round >> isPlayerMove;
+	io::read(_in, size.x);
+	io::read(_in, size.y);
+	io::read(_in, round);
+	io::read(_in, isPlayerMove);
+	io::read(_in, toNextSpell);
+
+	World* world = new World(window, size);
+
+	window->resize(size);
+
+	if (size < V2(15, 15) || size > V2(60, 60))
+		throw new Engine::LoadingMapException("Wrong map size.");
+
+	if (round < 0)
+		throw new Engine::LoadingMapException("Invalid round.");
+
+	//window->logs->load(_in);
+	//window->printLogs();
+
+	int organismAmount = 0;
+	io::read(_in, organismAmount);
+	//_in >> organismAmount;
+	for (int i = 0; i < organismAmount; i++)
+	{
+		Organism* organism = Organism::load(_in, world);
+		if (organism == nullptr)
+			throw new Engine::LoadingMapException("Error while loading organism");
+
+		world->addOrganism(organism);
+
+		if (organism->getType() == HUMAN)
+		{
+			world->player = (Player*)organism;
+			world->player->setToNextSpell(toNextSpell);
+		}
+	}
+
+	window->setCenterPos(world->player->getPos());
+	return world;
 }
 
 bool World::compareOrganismsByInitiative(const Organism* a, const Organism* b)
 {
-	if (a->initiative == b->initiative) return (a->age > b->age);
-	return (a->initiative > b->initiative);
+	if (a->getInitative() == b->getInitative()) return (a->getAge() > b->getAge());
+	return (a->getInitative() > b->getInitative());
 }
 

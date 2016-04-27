@@ -14,8 +14,8 @@ namespace Game
 
 		void collision(Organism* target, bool isAttacker = false) override
 		{
-			target->isDieing = true;
-			isDieing = true;
+			target->setIsDieing();
+			setIsDieing();
 		}
 
 		OrganismType getType() override

@@ -18,7 +18,7 @@ void Animal::action()
 
 		world->moveOrganism(this, dir);
 	}
-	catch (const Engine::InterruptActionException& e)
+	catch (const Engine::InterruptActionException&)
 	{
 	}
 }
@@ -39,19 +39,21 @@ void Animal::collision(Organism* target, bool isAttacker /* = false */)
 	if (isAttacker)
 		target->collision(this);
 
-	if (strength > target->strength || isAttacker && strength >= target->strength)
+	Text round = T(world->round);
+
+	if (strength > target->getStrength() || isAttacker && strength >= target->getStrength())
 	{
-		target->isDieing = true;
+		target->setIsDieing();
 		target->onDie();
 
 		if (isAttacker)
-			world->window->logs->addLog(T("[") + T(world->round) + T("] ") + T(Organism::getOrganismNameByType(getType())) + T(" killed ") + T(Organism::getOrganismNameByType(target->getType())) + T("."));
+			world->getWindow()->getLogs()->addLog(T("[") + round + T("] ") + T(Organism::getOrganismNameByType(getType())) + T(" killed ") + T(Organism::getOrganismNameByType(target->getType())) + T("."));
 	}
-	else if (strength < target->strength && isAttacker)
+	else if (strength < target->getStrength() && isAttacker)
 	{
 		isDieing = true;
 		onDie();
-		world->window->logs->addLog(T("[") + T(world->round) + T("] ") + T(Organism::getOrganismNameByType(getType())) + T(" attacked ") + T(Organism::getOrganismNameByType(target->getType())) + T(" and died."));
+		world->getWindow()->getLogs()->addLog(T("[") + round + T("] ") + T(Organism::getOrganismNameByType(getType())) + T(" attacked ") + T(Organism::getOrganismNameByType(target->getType())) + T(" and died."));
 		throw Engine::InterruptActionException();
 	}
 }

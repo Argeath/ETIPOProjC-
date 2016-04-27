@@ -35,7 +35,7 @@ Text::Text(char c)
 
 Text::Text(int i)
 {
-	string = new char[12];
+	string = new char[32];
 	//string = (char*)malloc(sizeof(int));
 	itoa(i, string, 10);
 }
@@ -72,6 +72,8 @@ void Text::clearLastChar()
 
 int Text::length() const
 {
+	if (string == nullptr) return 0;
+
 	return strlen(string);
 }
 
@@ -82,11 +84,12 @@ bool Text::isEmpty() const
 
 void Text::cpy(char* str)
 {
+	Text tmp(str);
 	delete[] string;
 	int size = strlen(str);
 	string = new char[size + 1];
 	//string = (char*)malloc(sizeof(char) * (size + 1));
-	strcpy(string, str);
+	strcpy(string, tmp);
 }
 
 void Text::cat(char* str)

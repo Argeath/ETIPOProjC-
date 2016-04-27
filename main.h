@@ -1,10 +1,5 @@
 #pragma once
 
-#define _USE_MATH_DEFINES
-
-#define MAP_WIDTH		40
-#define MAP_HEIGHT		40
-
 #define MAX_WIDTH		30
 #define MAX_HEIGHT		30
 
@@ -23,15 +18,16 @@
 #include <queue>
 #include <exception>
 #include <iostream>
+#include <fstream>
 #include <windows.h>
 #include "pdcurses/curses.h"
 
+#include "io.h"
 #include "Vector2.h"
 #include "text.h"
 #include "Logs.h"
 #include "InterruptActionException.h"
-
-#define MAP_SIZE V2(MAP_WIDTH, MAP_HEIGHT)
+#include "LoadingMapException.h"
 
 #include "DialogBox.h"
 #include "BaseGame.h"

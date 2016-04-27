@@ -4,7 +4,8 @@ namespace Engine
 {
 	class InterruptActionException : std::exception
 	{
-		virtual const char* what() const throw()
+	public:
+		const char* what() const throw() override
 		{
 			return "Object removed in process.";
 		}

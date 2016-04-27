@@ -128,6 +128,12 @@
     <ClInclude Include="Logs.h">
       <Filter>Engine</Filter>
     </ClInclude>
+    <ClInclude Include="LoadingMapException.h">
+      <Filter>Engine\Exceptions</Filter>
+    </ClInclude>
+    <ClInclude Include="io.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />

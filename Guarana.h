@@ -13,7 +13,7 @@ namespace Game
 
 		void collision(Organism* target, bool isAttacker) override
 		{
-			target->strength += 3;
+			target->setStrength(target->getStrength() + 3);
 		}
 
 		OrganismType getType() override
