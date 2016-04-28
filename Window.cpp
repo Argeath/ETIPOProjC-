@@ -24,6 +24,9 @@ Window::~Window()
 
 	if (game != nullptr)
 		delete game;
+
+	if(logs != nullptr)
+		delete logs;
 }
 
 void Window::resize(Vector2<int> size)
@@ -172,21 +175,29 @@ void inputMapSizeXSuccess()
 {
 	int number = ((InputNumbersDialogBox*)Window::getActiveWindow()->getDialogBox())->getResult();
 
-	Window::getActiveWindow()->newSize.x = number;
-	Window::getActiveWindow()->showWindow(InputMapSizeY);
+	if(number < 20 || number > 60) {
+		Window::getActiveWindow()->showWindow(InputMapSizeX);
+	} else {
+		Window::getActiveWindow()->newSize.x = number;
+		Window::getActiveWindow()->showWindow(InputMapSizeY);
+	}
 }
 
 void inputMapSizeYSuccess()
 {
 	int number = ((InputNumbersDialogBox*)Window::getActiveWindow()->getDialogBox())->getResult();
+	if (number < 20 || number > 60) {
+		Window::getActiveWindow()->showWindow(InputMapSizeY);
+	}
+	else {
+		Window::getActiveWindow()->newSize.y = number;
+		Window::getActiveWindow()->resize(Window::getActiveWindow()->newSize);
 
-	Window::getActiveWindow()->newSize.y = number;
-	Window::getActiveWindow()->resize(Window::getActiveWindow()->newSize);
-
-	delete Window::getActiveWindow()->getGame();
-	Window::getActiveWindow()->setGame(new Game::World(Window::getActiveWindow(), Window::getActiveWindow()->newSize));
-	Window::getActiveWindow()->getGame()->init();
-	closeDialogBox();
+		delete Window::getActiveWindow()->getGame();
+		Window::getActiveWindow()->setGame(new Game::World(Window::getActiveWindow(), Window::getActiveWindow()->newSize));
+		Window::getActiveWindow()->getGame()->init();
+		closeDialogBox();
+	}
 }
 
 void Window::showWindow(DialogBoxType type)

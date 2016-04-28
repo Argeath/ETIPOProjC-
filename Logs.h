@@ -14,6 +14,11 @@ namespace Engine
 		{
 		}
 
+		~Logs()
+		{
+			items.clear();
+		}
+
 		int size() const
 		{
 			return items.size();
